@@ -1,0 +1,39 @@
+<br><br>
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="m-0 text-center text-white"><p>&copy; 2019 Jrtechs<p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+    /**
+     * This is some simple JS to get the navbar working on a small/mobile screen
+     * without using the entire boostrap JS library.
+     */
+    const e = document.querySelector(".navbar-toggler");
+    const t = document.querySelector(".navbar-collapse");
+
+    e.onclick = function()
+    {
+        if (e.getAttribute("aria-expanded") == "false")
+        {
+            t.classList.remove('collapse');
+            e.setAttribute('aria-expanded', true);
+        }
+        else
+        {
+            e.setAttribute("aria-expanded", false);
+            t.classList.add('collapse');
+        }
+    }
+</script>
+
+</body>
+
+</html>

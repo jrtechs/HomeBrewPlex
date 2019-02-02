@@ -1,0 +1,12 @@
+{>header}
+
+<div class="container">
+    {if loggedIn}
+        {>main}
+    {else}
+        {>login}
+    {/if}
+
+</div>
+
+{>footer}

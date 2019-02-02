@@ -13,3 +13,13 @@ This web system enables users to log into the system and view videos using the b
 - Easy to install
 - Easily expandable and hackable to fit your needs
 
+
+
+npm dependencies
+```bash
+npm install express --save
+npm install fs --save
+npm install express-session --save
+npm install whiskers --save
+
+```

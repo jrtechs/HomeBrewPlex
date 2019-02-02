@@ -21,6 +21,12 @@ module.exports =
          */
         getFileAsJSON: function(fileName)
         {
-            return JSON.parse(fs.readFileSync(fileName, 'utf8'));
+            return JSON.parse(module.exports.getFile(fileName));
+        },
+
+
+        getFile: function(filename)
+        {
+            return fs.readFileSync(filename,  'utf8');
         }
     };
