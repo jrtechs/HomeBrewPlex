@@ -41,7 +41,6 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     var templateContext = Object();
     var prom = [];
 
-
     prom.push(fileIO.getFile("./html/mainTemplate.html"));
     prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
     prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
@@ -49,8 +48,7 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     {
         templateContext.loggedIn = true;
         if(templateDependencyFunction !== null)
-            prom.push(templateDependencyFunction(templateContext));
-
+            prom.push(templateDependencyFunction(templateContext, request));
         prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
     }
     else
@@ -65,12 +63,17 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     });
 }
 
-function getUserInformation(templateContext)
+function getUserInformation(templateContext, request)
 {
     templateContext.users = config.users;
 }
 
-app.get('/', (req, res) => renderHTML(req, res, "home.html", null));
+function getHomePageInformation(templateContext, request)
+{
+    templateContext.username = request.session.username;
+}
+
+app.get('/', (req, res) => renderHTML(req, res, "home.html", getHomePageInformation));
 app.get('/users', (req, res) => renderHTML(req, res, "users.html", getUserInformation));
 
 app.use(express.static('css'));
@@ -188,6 +191,12 @@ app.post('/removeuser', function(request, result)
         result.status(401);
         result.send('None shall pass');
     }
+});
+
+app.post('/logout', function(request, result)
+{
+    request.session.login = false;
+    result.redirect('/');
 });
 
 
