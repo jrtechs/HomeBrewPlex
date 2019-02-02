@@ -107,7 +107,7 @@ module.exports =
             newUser.salt = passObject.salt;
             newUser.password = passObject.pass;
 
-            configuration.push(newUser);
+            configuration.users.push(newUser);
 
             return true;
         },

@@ -48,6 +48,9 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     if(request.session.login === true)
     {
         templateContext.loggedIn = true;
+        if(templateDependencyFunction !== null)
+            prom.push(templateDependencyFunction(templateContext));
+
         prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
     }
     else
@@ -62,7 +65,13 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     });
 }
 
+function getUserInformation(templateContext)
+{
+    templateContext.users = config.users;
+}
+
 app.get('/', (req, res) => renderHTML(req, res, "home.html", null));
+app.get('/users', (req, res) => renderHTML(req, res, "users.html", getUserInformation));
 
 app.use(express.static('css'));
 app.use(express.static('js'));
@@ -109,7 +118,6 @@ app.get('/video', function(request, result)
                     'Content-Length': chunksize,
                     'Content-Type': 'video/mp4',
                 };
-
             result.writeHead(206, head);
             file.pipe(result);
         }
@@ -131,5 +139,56 @@ app.get('/video', function(request, result)
         result.send('None shall pass');
     }
 });
+
+
+
+app.post('/addUser', function(request, result)
+{
+    if(request.session.login === true)
+    {
+        userUtils.addUser(request.body.username, request.body.password, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+        result.redirect('/users');
+    }
+    else
+    {
+        result.status(401);
+        result.send('None shall pass');
+    }
+});
+
+
+app.post('/edituser', function(request, result)
+{
+    if(request.session.login === true)
+    {
+        userUtils.editUser(request.body.id, request.body.username, request.body.password, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+        result.redirect('/users');
+    }
+    else
+    {
+        result.status(401);
+        result.send('None shall pass');
+    }
+});
+
+
+
+app.post('/removeuser', function(request, result)
+{
+    if(request.session.login === true)
+    {
+        userUtils.removeUser(request.body.id, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+        result.redirect('/users');
+    }
+    else
+    {
+        result.status(401);
+        result.send('None shall pass');
+    }
+});
+
 
 app.listen(config.port, () => console.log(`App listening on port ${config.port}!`));

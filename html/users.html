@@ -1,0 +1,110 @@
+<script>
+    function editHostForm(id, username)
+    {
+        $("#editUserBox").css("display", "block");
+        $("#useridLabel").val(id);
+        $("#usernameLabel").val(username);
+    }
+</script>
+
+<div id="editUserBox" class="row" style="display:none">
+
+    <!-- Edit User -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Edit User</h3>
+            </div>
+            <div class="card-body">
+                <form action="/edituser" method ="post" class="p-2">
+                    <div class="form-group">
+                        <input class="form-control" id="useridLabel" type="text" name="id" required disabled>
+                        <label>User ID</label>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" id="usernameLabel" type="text" name="username" required>
+                        <label>User Name</label>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" name="add_user" value="Update User"
+                               class="btn btn-lg btn-secondary"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+
+<div class="row">
+    <!-- Current Users -->
+    <div class="col-md-6">
+        <div class='card'>
+            <div class="card-header">
+                <h3 class="text-center">Users</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <td>User Name</td>
+                            <td>User ID</td>
+                            <td>Edit</td>
+                            <td>Terminate</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {for user in users}
+                        <tr>
+                            <td>{user.username}</td>
+                            <td>{user.id}</td>
+                            <td>
+                                <button onclick="editHostForm({user.id}, '{user.username}')" class="btn btn-secondary">Edit User</button>
+                            </td>
+                            <td>
+                                <form action="/removeuser" method ="post" >
+                                    <input type="submit" name="submit" value="Delete" class="btn btn-secondary"/>
+                                    <input type='hidden' name='id' value='{user.id}' />
+                                </form>
+                            </td>
+                        </tr>
+                    {/for}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Add New User</h3>
+            </div>
+            <div class="card-body">
+                <form action="/addUser" method ="post" class="p-2">
+                    <div class="form-group">
+                        <label> User Name
+                            <input class="form-control w-100" type="text" name="username" required>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Password
+                            <input class="form-control w-100" type="password" name="password" required>
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" name="add_user" value="Create User"
+                               class="btn btn-lg btn-secondary"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
