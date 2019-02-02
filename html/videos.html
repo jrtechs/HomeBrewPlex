@@ -1,6 +1,6 @@
 <h1 class="text-center">Videos</h1>
 
-
+<input id="videoFilter" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 <table class="table table-striped">
     <thead class="thead-dark">
     <tr>
@@ -11,7 +11,7 @@
     </thead>
     <tbody id="movieTable">
         {for video in videos}
-            <tr>
+            <tr class="table_row">
                 <td>{video.name}</td>
                 <td>{video.length}</td>
                 <td>
@@ -21,3 +21,32 @@
         {/for}
     </tbody>
 </table>
+
+
+<script>
+    function filterTable()
+    {
+        var input = $("input#videoFilter").val().toLowerCase();
+
+        $(".table_row").css({"display": "none"});
+
+        $(".table_row").each(function(index)
+        {
+            if($(this).text().toLowerCase().includes(input))
+            {
+                $(this).toggle(true);
+                //$(this).css({"display": "none"});
+            }
+        });
+
+        if(input.toString().split(" ").join("") === "")
+        {
+            $(".satellite_row").toggle(true);
+        }
+    }
+
+    $(document).ready(function()
+    {
+        $("input#videoFilter").bind("keyup", filterTable);
+    });
+</script>

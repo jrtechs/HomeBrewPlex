@@ -8,9 +8,6 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
-
-const url = require('url');
-
 const fs = require('fs');
 
 const app = express();
@@ -28,7 +25,7 @@ app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 /** Template engine */
 const whiskers = require('whiskers');
 
-
+const rootDir = '/home/jeff/public/Movies/';
 
 
 function fetchInTemplate(templateContext, templateKey, filename)
@@ -90,10 +87,30 @@ app.post('/login', function(request, result)
     result.redirect('/');
 });
 
+var videos = null;
 
 function getVideosTemplateInformation(templateContext, request)
 {
-    templateContext.videos = [{name: "test1", length: 32},{name: "test2", length: 55}];
+    if(videos === null)
+    {
+        videos = [];
+        return new Promise(function(resolve, reject)
+        {
+            fs.readdir(rootDir, (err, files) =>
+            {
+                files.forEach(file =>
+                {
+                    videos.push({name: file, length: "n/a"});
+                });
+                templateContext.videos = videos;
+                resolve();
+            });
+        })
+    }
+    else
+    {
+        templateContext.videos = videos;
+    }
 }
 
 function getVideoTemplateInfo(templateContext, request)
@@ -110,10 +127,7 @@ app.get('/video/', function(request, result)
     if(request.session.login === true)
     {
         var videoID = request.query.v;
-
-        const path = '/home/jeff/public/Movies' + videoID;
-
-        console.log(path);
+        const path = rootDir + videoID;
 
         const stat = fs.statSync(path);
         const fileSize = stat.size;
