@@ -8,6 +8,10 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
+const path = require('path');
+
+
+const fs = require('fs');
 
 const app = express();
 
@@ -72,6 +76,60 @@ app.post('/login', function(request, result)
         request.session.username = request.body.username;
     }
     result.redirect('/');
+});
+
+
+app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", null));
+app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", null));
+
+
+app.get('/video', function(request, result)
+{
+    if(request.session.login === true)
+    {
+        const path = '/home/jeff/public/CheckerMoves.mp4';
+        const stat = fs.statSync(path);
+        const fileSize = stat.size;
+        const range = request.headers.range;
+
+        if (range)
+        {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1]
+                ? parseInt(parts[1], 10)
+                : fileSize-1;
+
+            const chunksize = (end-start)+1;
+            const file = fs.createReadStream(path, {start, end});
+            const head =
+                {
+                    'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                    'Accept-Ranges': 'bytes',
+                    'Content-Length': chunksize,
+                    'Content-Type': 'video/mp4',
+                };
+
+            result.writeHead(206, head);
+            file.pipe(result);
+        }
+        else
+        {
+            const head =
+                {
+                    'Content-Length': fileSize,
+                    'Content-Type': 'video/mp4',
+                };
+
+            result.writeHead(200, head);
+            fs.createReadStream(path).pipe(result);
+        }
+    }
+    else
+    {
+        result.status(401);
+        result.send('None shall pass');
+    }
 });
 
 app.listen(config.port, () => console.log(`App listening on port ${config.port}!`));
