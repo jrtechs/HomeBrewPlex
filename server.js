@@ -8,8 +8,8 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
-const path = require('path');
 
+const url = require('url');
 
 const fs = require('fs');
 
@@ -91,15 +91,30 @@ app.post('/login', function(request, result)
 });
 
 
-app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", null));
-app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", null));
+function getVideosTemplateInformation(templateContext, request)
+{
+    templateContext.videos = [{name: "test1", length: 32},{name: "test2", length: 55}];
+}
+
+function getVideoTemplateInfo(templateContext, request)
+{
+    templateContext.videoURL = request.query.v;
+}
+
+app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTemplateInformation));
+app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTemplateInfo));
 
 
-app.get('/video', function(request, result)
+app.get('/video/', function(request, result)
 {
     if(request.session.login === true)
     {
-        const path = '/home/jeff/public/CheckerMoves.mp4';
+        var videoID = request.query.v;
+
+        const path = '/home/jeff/public/Movies' + videoID;
+
+        console.log(path);
+
         const stat = fs.statSync(path);
         const fileSize = stat.size;
         const range = request.headers.range;

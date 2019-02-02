@@ -1,0 +1,23 @@
+<h1 class="text-center">Videos</h1>
+
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <td>Name</td>
+        <td>Length</td>
+        <td>Watch</td>
+    </tr>
+    </thead>
+    <tbody id="movieTable">
+        {for video in videos}
+            <tr>
+                <td>{video.name}</td>
+                <td>{video.length}</td>
+                <td>
+                    <a href="/watch?v={video.name}" class="btn btn-secondary active" role="button" aria-pressed="true">View</a>
+                </td>
+            </tr>
+        {/for}
+    </tbody>
+</table>
