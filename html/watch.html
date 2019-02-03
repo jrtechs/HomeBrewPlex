@@ -1,13 +1,32 @@
-<video id="videoPlayer" width="768" height="432" controls onerror="failed(event)">
-    <source src="/video?v={videoURL}" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
 
+<h2 class="d-flex justify-content-center">{videoURL}</h2>
+<div class="d-flex justify-content-center p-4">
+    <video id="videoPlayer" width="768" height="432" controls onerror="failed(event)">
+        <source src="/video?v={videoURL}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<div class="d-flex justify-content-center p-4">
+    <p id="copyStatus"></p>
+    <input class="form-control" type="text" value="{serverURL}/video?v={videoURL}&api={api}" id="directLink">
+    <button class="btn btn-secondary align-content-center" onclick="copyVideoPath()">Copy Direct Link</button>
+</div>
 
 <script>
-    function failed(e) {
+    function copyVideoPath()
+    {
+        var copyText = document.getElementById("directLink");
+        copyText.select();
+        document.execCommand("copy");
+        $("#copyStatus").html("URL copied to clipboard.");
+    }
+
+    function failed(e)
+    {
         // video playback failed - show a message saying why
-        switch (e.target.error.code) {
+        switch (e.target.error.code)
+        {
             case e.target.error.MEDIA_ERR_ABORTED:
                 alert('You aborted the video playback.');
                 break;

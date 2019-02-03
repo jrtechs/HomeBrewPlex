@@ -29,6 +29,8 @@ const whiskers = require('whiskers');
 
 var rootDir = '/home/jeff/public/Shows/';
 
+var serverURL = "localhost:5000";
+
 function fetchInTemplate(templateContext, templateKey, filename)
 {
     templateContext[templateKey] = fileIO.getFile(filename);
@@ -66,7 +68,6 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
 function getUserInformation(templateContext, request)
 {
     templateContext.users = config.users;
-
     templateContext.apiKey = request.session.API;
     templateContext.id = request.session.userID;
     templateContext.username = request.session.username;
@@ -85,21 +86,6 @@ app.use(express.static('js'));
 app.use(express.static('img'));
 
 
-app.post('/login', function(request, result)
-{
-    if(userUtils.checkLogin(request.body.username, request.body.password, config))
-    {
-        request.session.login = true;
-        request.session.username = request.body.username;
-        request.session.userID = userUtils.getID(request.body.username, config);
-        request.session.API = userUtils.getAPIKEY(request.body.username, config);
-        if(userUtils.isAdmin(request.body.username, config))
-        {
-            request.session.admin = true;
-        }
-    }
-    result.redirect('/');
-});
 
 var videos = null;
 
@@ -130,6 +116,8 @@ function getVideosTemplateInformation(templateContext, request)
 
 function getVideoTemplateInfo(templateContext, request)
 {
+    templateContext.api = request.session.API;
+    templateContext.serverURL = serverURL;
     templateContext.videoURL = request.query.v;
 }
 
@@ -139,11 +127,10 @@ app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTempl
 
 app.get('/video/', function(request, result)
 {
-    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+    if(checkPrivilege(request) >= PRIVILEGE.MEMBER || userUtils.isValidAPI(request.query.api, config))
     {
         var videoID = request.query.v;
         const path = rootDir + videoID;
-
         const stat = fs.statSync(path);
         const fileSize = stat.size;
         const range = request.headers.range;
@@ -291,6 +278,24 @@ app.post('/logout', function(request, result)
 {
     request.session.login = false;
     request.session.admin = false;
+    result.redirect('/');
+});
+
+
+
+app.post('/login', function(request, result)
+{
+    if(userUtils.checkLogin(request.body.username, request.body.password, config))
+    {
+        request.session.login = true;
+        request.session.username = request.body.username;
+        request.session.userID = userUtils.getID(request.body.username, config);
+        request.session.API = userUtils.getAPIKEY(request.body.username, config);
+        if(userUtils.isAdmin(request.body.username, config))
+        {
+            request.session.admin = true;
+        }
+    }
     result.redirect('/');
 });
 

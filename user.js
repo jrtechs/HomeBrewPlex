@@ -71,6 +71,18 @@ const getIndexOfUser = function(username, configuration)
 module.exports =
     {
 
+        isValidAPI: function(apiKey, configuration)
+        {
+            for(var i = 0; i < configuration.users.length; i++)
+            {
+                if(configuration.users[i].api === apiKey)
+                {
+                    return true;
+                }
+            }
+            return false;
+        },
+
         isAdmin: function(username, configuration)
         {
             var index = getIndexOfUser(username, configuration);
