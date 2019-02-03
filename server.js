@@ -8,6 +8,9 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
+
+const recursive = require('./recursiveTraversal');
+
 const fs = require('fs');
 
 const app = express();
@@ -25,8 +28,7 @@ app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 /** Template engine */
 const whiskers = require('whiskers');
 
-const rootDir = '/home/jeff/public/Movies/';
-
+var rootDir = '/home/jeff/public/Movies/';
 
 function fetchInTemplate(templateContext, templateKey, filename)
 {
@@ -96,11 +98,12 @@ function getVideosTemplateInformation(templateContext, request)
         videos = [];
         return new Promise(function(resolve, reject)
         {
-            fs.readdir(rootDir, (err, files) =>
+            recursive(rootDir, function (err, files)
             {
+                console.log(files);
                 files.forEach(file =>
                 {
-                    videos.push({name: file, length: "n/a"});
+                    videos.push({name: file.replace(rootDir, ''), length: "n/a"});
                 });
                 templateContext.videos = videos;
                 resolve();
