@@ -27,6 +27,13 @@ const createHashedPasswordObject = function(password)
 };
 
 
+const generateRandomAPIKey = function()
+{
+    const randBuff = crypto.randomBytes(64);
+    return crypto.createHash('sha256').update(randBuff).digest('hex');
+};
+
+
 /**
  * Hashes a pasword with a aprticular salt
  * using the crypto library
@@ -63,6 +70,18 @@ const getIndexOfUser = function(username, configuration)
 
 module.exports =
     {
+
+        isAdmin: function(username, configuration)
+        {
+            var index = getIndexOfUser(username, configuration);
+
+            if(index !== -1)
+            {
+                return configuration.users[index].admin;
+            }
+            return false;
+        },
+
         /**
          * Checks to see if there was a valid login attempt
          *
@@ -81,6 +100,7 @@ module.exports =
             return configuration.users[userIndex].password == hashedPassword;
         },
 
+
         /**
          * Adds a user to the configuration
          *
@@ -89,7 +109,7 @@ module.exports =
          * @param configuration
          * @returns {boolean}
          */
-        addUser: function(username, password, configuration)
+        addUser: function(username, password, admin, configuration)
         {
             const userIndex = getIndexOfUser(username, configuration);
             if(userIndex !== -1)
@@ -97,7 +117,7 @@ module.exports =
 
             var newUser = new Object();
             newUser.username = username;
-
+            newUser.api = generateRandomAPIKey();
             if(configuration.users.length === 0)
                 newUser.id = 1;
             else
@@ -106,11 +126,11 @@ module.exports =
             const passObject = createHashedPasswordObject(password);
             newUser.salt = passObject.salt;
             newUser.password = passObject.pass;
-
+            newUser.admin = admin;
             configuration.users.push(newUser);
-
             return true;
         },
+
 
         /**
          * Edits a user based on their id
@@ -120,13 +140,14 @@ module.exports =
          * @param password
          * @param configuration
          */
-        editUser: function(id, userName, password, configuration)
+        editUser: function(id, userName, password, admin, configuration)
         {
             for(var i = 0; i < configuration.users.length; i++)
             {
                 if (configuration.users[i].id + "" === id)
                 {
                     configuration.users[i].username = userName;
+                    configuration.users[i].admin = admin;
 
                     var passObj = createHashedPasswordObject(password);
                     configuration.users[i].salt = passObj.salt;
@@ -134,6 +155,7 @@ module.exports =
                 }
             }
         },
+
 
         /**
          * Removes a user account from the configuration

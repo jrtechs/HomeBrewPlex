@@ -8,7 +8,6 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
-
 const recursive = require('./recursiveTraversal');
 
 const fs = require('fs');
@@ -28,7 +27,7 @@ app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 /** Template engine */
 const whiskers = require('whiskers');
 
-var rootDir = '/home/jeff/public/Movies/';
+var rootDir = '/home/jeff/public/Shows/';
 
 function fetchInTemplate(templateContext, templateKey, filename)
 {
@@ -43,9 +42,11 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
     prom.push(fileIO.getFile("./html/mainTemplate.html"));
     prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
     prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
-    if(request.session.login === true)
+    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
     {
         templateContext.loggedIn = true;
+        if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+            templateContext.admin = true;
         if(templateDependencyFunction !== null)
             prom.push(templateDependencyFunction(templateContext, request));
         prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
@@ -85,6 +86,12 @@ app.post('/login', function(request, result)
     {
         request.session.login = true;
         request.session.username = request.body.username;
+
+        if(userUtils.isAdmin(request.body.username, config))
+        {
+            request.session.admin = true;
+        }
+
     }
     result.redirect('/');
 });
@@ -127,7 +134,7 @@ app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTempl
 
 app.get('/video/', function(request, result)
 {
-    if(request.session.login === true)
+    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
     {
         var videoID = request.query.v;
         const path = rootDir + videoID;
@@ -179,9 +186,13 @@ app.get('/video/', function(request, result)
 
 app.post('/addUser', function(request, result)
 {
-    if(request.session.login === true)
+    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
     {
-        userUtils.addUser(request.body.username, request.body.password, config);
+        console.log(request.body);
+        var admin = false;
+        if(request.body.admin === 'on')
+            admin = true;
+        userUtils.addUser(request.body.username, request.body.password,admin, config);
         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
         result.redirect('/users');
     }
@@ -195,9 +206,12 @@ app.post('/addUser', function(request, result)
 
 app.post('/edituser', function(request, result)
 {
-    if(request.session.login === true)
+    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
     {
-        userUtils.editUser(request.body.id, request.body.username, request.body.password, config);
+        var admin = false;
+        if(request.body.admin === 'on')
+            admin = true;
+        userUtils.editUser(request.body.id, request.body.username, request.body.password,admin, config);
         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
         result.redirect('/users');
     }
@@ -208,11 +222,19 @@ app.post('/edituser', function(request, result)
     }
 });
 
-
+const PRIVILEGE = {NOBODY: 0, MEMBER: 1, ADMIN: 2};
+const checkPrivilege = function(request)
+{
+    if(request.session.login !== true)
+        return PRIVILEGE.NOBODY;
+    else if(request.session.admin === true)
+        return PRIVILEGE.ADMIN;
+    return PRIVILEGE.MEMBER;
+};
 
 app.post('/removeuser', function(request, result)
 {
-    if(request.session.login === true)
+    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
     {
         userUtils.removeUser(request.body.id, config);
         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
@@ -228,6 +250,7 @@ app.post('/removeuser', function(request, result)
 app.post('/logout', function(request, result)
 {
     request.session.login = false;
+    request.session.admin = false;
     result.redirect('/');
 });
 
