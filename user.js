@@ -82,6 +82,13 @@ module.exports =
             return false;
         },
 
+
+        getID: function(username, configuration)
+        {
+            var index = getIndexOfUser(username, configuration);
+            return configuration.users[index].id;
+        },
+
         /**
          * Checks to see if there was a valid login attempt
          *
@@ -144,8 +151,9 @@ module.exports =
         {
             for(var i = 0; i < configuration.users.length; i++)
             {
-                if (configuration.users[i].id + "" === id)
+                if (configuration.users[i].id=== id)
                 {
+                    console.log("User account updated.");
                     configuration.users[i].username = userName;
                     configuration.users[i].admin = admin;
 

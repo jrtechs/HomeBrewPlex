@@ -21,5 +21,20 @@ npm install express --save
 npm install fs --save
 npm install express-session --save
 npm install whiskers --save
-
 ```
+
+
+Codacs which don't work
+H.265 
+MPEG-2 Video  AC-3 (ATSC A/52)
+
+Video but no audio
+H.264 audio:AC-3 (ATSC A/52)
+H.264 (Main Profile)  AC-3 (ATSC A/52)
+
+Audio but no video:
+H.265 (Main 10 Profile)  MPEG-4 AAC
+
+
+just work:
+H.264 (High Profile),   MPEG-4 AAC

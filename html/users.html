@@ -8,7 +8,6 @@
 </script>
 
 <div id="editUserBox" class="row" style="display:none">
-
     <!-- Edit User -->
     <div class="col-md-6">
         <div class="card">
@@ -121,5 +120,35 @@
         </div>
     </div>
 {else}
-    This is an admin page.
+    {if loggedIn}
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Update Profile</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/updateUser" method ="post" class="p-2">
+                        <div class="form-group">
+                            <input class="form-control" id="usernameLabel" type="text" name="username" value="{username}" required>
+                            <label>User Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="password" name="password" required>
+                            <label>Password</label>
+                        </div>
+                        <div class="text-center">
+                            <input type="submit" name="Update Profile" value="Update User"
+                                   class="btn btn-lg btn-secondary"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+        </div>
+    {else}
+        <h1 class="align-content-center">Login Required</h1>
+        <div class="align-content-center">
+            <img src="/includes/img/404.jpg" alt="Page not found" width="70%" />
+        </div>
+    {/if}
 {/if}

@@ -66,6 +66,8 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
 function getUserInformation(templateContext, request)
 {
     templateContext.users = config.users;
+    templateContext.id = request.session.userID;
+    templateContext.username = request.session.username;
 }
 
 function getHomePageInformation(templateContext, request)
@@ -78,6 +80,7 @@ app.get('/users', (req, res) => renderHTML(req, res, "users.html", getUserInform
 
 app.use(express.static('css'));
 app.use(express.static('js'));
+app.use(express.static('img'));
 
 
 app.post('/login', function(request, result)
@@ -86,12 +89,11 @@ app.post('/login', function(request, result)
     {
         request.session.login = true;
         request.session.username = request.body.username;
-
+        request.session.userID = userUtils.getID(request.body.username, config);
         if(userUtils.isAdmin(request.body.username, config))
         {
             request.session.admin = true;
         }
-
     }
     result.redirect('/');
 });
@@ -212,6 +214,24 @@ app.post('/edituser', function(request, result)
         if(request.body.admin === 'on')
             admin = true;
         userUtils.editUser(request.body.id, request.body.username, request.body.password,admin, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+        result.redirect('/users');
+    }
+    else
+    {
+        result.status(401);
+        result.send('None shall pass');
+    }
+});
+
+
+app.post('/updateUser', function(request, result)
+{
+    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+    {
+        console.log(request.session.userID);
+        var admin = false;
+        userUtils.editUser(request.session.userID, request.body.username, request.body.password,admin, config);
         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
         result.redirect('/users');
     }
