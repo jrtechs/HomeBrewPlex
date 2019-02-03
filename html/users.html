@@ -1,15 +1,17 @@
 <script>
-    function editHostForm(id, username)
+    function editHostForm(id, username, apiKey)
     {
-        $("#editUserBox").css("display", "block");
+        $("#editUserBox").css("display", "");
         $("#useridLabel").val(id);
         $("#usernameLabel").val(username);
+        $("#revokeAPIUsername").val(username);
+        $("#apiDisplay").html(apiKey);
     }
 </script>
 
 <div id="editUserBox" class="row" style="display:none">
     <!-- Edit User -->
-    <div class="col-md-6">
+    <div class="col-md-6 col-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="text-center">Edit User</h3>
@@ -35,6 +37,29 @@
                     </div>
                     <div class="text-center">
                         <input type="submit" name="add_user" value="Update User"
+                               class="btn btn-lg btn-secondary"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <!-- Edit API -->
+    <div class="col-md-6 col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">API Settings</h3>
+            </div>
+            <div class="card-body">
+
+                <h4>Current API Key</h4>
+                <p id="apiDisplay"></p>
+
+                <form action="/revokeAPI" method ="post" class="p-2">
+                    <input class="form-control" id="revokeAPIUsername" type="text" name="username" value="" hidden>
+                    <div class="text-center">
+                        <input type="submit" name="revoke_api" value="Generate New API Key"
                                class="btn btn-lg btn-secondary"/>
                     </div>
                 </form>
@@ -70,7 +95,7 @@
                             <td>{user.id}</td>
                             <td>{user.admin}</td>
                             <td>
-                                <button onclick="editHostForm({user.id}, '{user.username}')" class="btn btn-secondary">Edit User</button>
+                                <button onclick="editHostForm({user.id}, '{user.username}', '{user.api}')" class="btn btn-secondary">Edit User</button>
                             </td>
                             <td>
                                 <form action="/removeuser" method ="post" >
@@ -121,29 +146,51 @@
     </div>
 {else}
     {if loggedIn}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Update Profile</h3>
+        <div class="row">
+            <div class="col-md-6 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Update Profile</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/updateUser" method ="post" class="p-2">
+                            <div class="form-group">
+                                <input class="form-control" id="usernameLabel" type="text" name="username" value="{username}" required>
+                                <label>User Name</label>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="password" name="password" required>
+                                <label>Password</label>
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" name="Update Profile" value="Update User"
+                                       class="btn btn-lg btn-secondary"/>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form action="/updateUser" method ="post" class="p-2">
-                        <div class="form-group">
-                            <input class="form-control" id="usernameLabel" type="text" name="username" value="{username}" required>
-                            <label>User Name</label>
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="password" name="password" required>
-                            <label>Password</label>
-                        </div>
-                        <div class="text-center">
-                            <input type="submit" name="Update Profile" value="Update User"
-                                   class="btn btn-lg btn-secondary"/>
-                        </div>
-                    </form>
-                </div>
+                <br>
             </div>
-            <br>
+            <div class="col-md-6 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">API Settings</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <h4>Current API Key</h4>
+                        <p>{apiKey}</p>
+
+                        <form action="/revokeAPI" method ="post" class="p-2">
+                            <div class="text-center">
+                                <input type="submit" name="revoke_api" value="Generate New API Key"
+                                       class="btn btn-lg btn-secondary"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+            </div>
         </div>
     {else}
         <h1 class="align-content-center">Login Required</h1>

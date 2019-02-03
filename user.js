@@ -89,6 +89,26 @@ module.exports =
             return configuration.users[index].id;
         },
 
+
+        revokeAPI: function(username, configuration)
+        {
+            var index = getIndexOfUser(username, configuration);
+
+            if(index !== -1)
+            {
+                configuration.users[index].api = generateRandomAPIKey();
+            }
+        },
+
+
+        getAPIKEY: function(username, configuration)
+        {
+            var index = getIndexOfUser(username, configuration);
+            if(index !== -1)
+                return configuration.users[index].api;
+            return 0;
+        },
+
         /**
          * Checks to see if there was a valid login attempt
          *

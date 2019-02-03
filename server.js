@@ -66,6 +66,8 @@ function renderHTML(request, result, templateFile, templateDependencyFunction)
 function getUserInformation(templateContext, request)
 {
     templateContext.users = config.users;
+
+    templateContext.apiKey = request.session.API;
     templateContext.id = request.session.userID;
     templateContext.username = request.session.username;
 }
@@ -90,6 +92,7 @@ app.post('/login', function(request, result)
         request.session.login = true;
         request.session.username = request.body.username;
         request.session.userID = userUtils.getID(request.body.username, config);
+        request.session.API = userUtils.getAPIKEY(request.body.username, config);
         if(userUtils.isAdmin(request.body.username, config))
         {
             request.session.admin = true;
@@ -184,6 +187,23 @@ app.get('/video/', function(request, result)
     }
 });
 
+
+app.post('/revokeAPI', function(request, result)
+{
+    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+    {
+        userUtils.revokeAPI(request.body.username, config);
+        request.session.API = userUtils.getAPIKEY(request.session.username, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+    }
+    else if (checkPrivilege(request) === PRIVILEGE.MEMBER)
+    {
+        userUtils.revokeAPI(request.session.username, config);
+        request.session.API = userUtils.getAPIKEY(request.session.username, config);
+        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+    }
+    result.redirect('/users');
+});
 
 
 app.post('/addUser', function(request, result)
