@@ -27,9 +27,9 @@ app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 /** Template engine */
 const whiskers = require('whiskers');
 
-var rootDir = '/home/jeff/public/Shows/';
+var rootDir = '/home/jeff/public/Movies/';
 
-var serverURL = "localhost:5000";
+var serverURL = "http://localhost:5000";
 
 function fetchInTemplate(templateContext, templateKey, filename)
 {
@@ -118,7 +118,7 @@ function getVideoTemplateInfo(templateContext, request)
 {
     templateContext.api = request.session.API;
     templateContext.serverURL = serverURL;
-    templateContext.videoURL = request.query.v;
+    templateContext.videoURL = request.query.v.split(" ").join("%20");
 }
 
 app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTemplateInformation));
@@ -127,6 +127,8 @@ app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTempl
 
 app.get('/video/', function(request, result)
 {
+    console.log("called");
+    console.log(request.query);
     if(checkPrivilege(request) >= PRIVILEGE.MEMBER || userUtils.isValidAPI(request.query.api, config))
     {
         var videoID = request.query.v;
@@ -169,6 +171,7 @@ app.get('/video/', function(request, result)
     }
     else
     {
+        console.log("invalid attempt to view video");
         result.status(401);
         result.send('None shall pass');
     }
