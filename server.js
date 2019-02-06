@@ -14,7 +14,14 @@ const filepreview = require('filepreview');
 
 const fs = require('fs');
 
+const routes = require('./routes');
+
+
+
 const app = express();
+
+
+app.use('/', routes);
 
 app.use(express.urlencoded());
 app.use(express.json());      // if needed
@@ -26,46 +33,46 @@ const config = fileIO.getFileAsJSON(CONFIG_FILE_NAME);
 /**Initializes sessions for login */
 app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 
-/** Template engine */
-const whiskers = require('whiskers');
+// /** Template engine */
+// const whiskers = require('whiskers');
 
 var rootDir = '/home/jeff/work/aaSchool/Algo/online Lectures/';
 
 var serverURL = "http://localhost:5000";
 
-function fetchInTemplate(templateContext, templateKey, filename)
-{
-    templateContext[templateKey] = fileIO.getFile(filename);
-}
+// function fetchInTemplate(templateContext, templateKey, filename)
+// {
+//     templateContext[templateKey] = fileIO.getFile(filename);
+// }
 
-function renderHTML(request, result, templateFile, templateDependencyFunction)
-{
-    var templateContext = Object();
-    var prom = [];
-
-    prom.push(fileIO.getFile("./html/mainTemplate.html"));
-    prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
-    prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
-    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
-    {
-        templateContext.loggedIn = true;
-        if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-            templateContext.admin = true;
-        if(templateDependencyFunction !== null)
-            prom.push(templateDependencyFunction(templateContext, request));
-        prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
-    }
-    else
-    {
-        prom.push(fetchInTemplate(templateContext, "login","./html/login.html"));
-    }
-
-    Promise.all(prom).then(function(content)
-    {
-        result.write(whiskers.render(content[0], templateContext));
-        result.end();
-    });
-}
+// function renderHTML(request, result, templateFile, templateDependencyFunction)
+// {
+//     var templateContext = Object();
+//     var prom = [];
+//
+//     prom.push(fileIO.getFile("./html/mainTemplate.html"));
+//     prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
+//     prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
+//     if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+//     {
+//         templateContext.loggedIn = true;
+//         if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//             templateContext.admin = true;
+//         if(templateDependencyFunction !== null)
+//             prom.push(templateDependencyFunction(templateContext, request));
+//         prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
+//     }
+//     else
+//     {
+//         prom.push(fetchInTemplate(templateContext, "login","./html/login.html"));
+//     }
+//
+//     Promise.all(prom).then(function(content)
+//     {
+//         result.write(whiskers.render(content[0], templateContext));
+//         result.end();
+//     });
+// }
 
 function getUserInformation(templateContext, request)
 {
@@ -75,13 +82,13 @@ function getUserInformation(templateContext, request)
     templateContext.username = request.session.username;
 }
 
-function getHomePageInformation(templateContext, request)
-{
-    templateContext.username = request.session.username;
-}
+// function getHomePageInformation(templateContext, request)
+// {
+//     templateContext.username = request.session.username;
+// }
 
-app.get('/', (req, res) => renderHTML(req, res, "home.html", getHomePageInformation));
-app.get('/users', (req, res) => renderHTML(req, res, "users.html", getUserInformation));
+// app.get('/', (req, res) => renderHTML(req, res, "home.html", getHomePageInformation));
+// app.get('/users', (req, res) => renderHTML(req, res, "users.html", getUserInformation));
 
 app.use(express.static('css'));
 app.use(express.static('js'));
@@ -135,8 +142,8 @@ function getVideoTemplateInfo(templateContext, request)
     templateContext.videoURL = request.query.v.split(" ").join("%20");
 }
 
-app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTemplateInformation));
-app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTemplateInfo));
+// app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTemplateInformation));
+// app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTemplateInfo));
 
 
 function isPublicVideo(videoURL)
