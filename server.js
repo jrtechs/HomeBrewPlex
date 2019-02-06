@@ -10,6 +10,8 @@ const userUtils = require('./user.js');
 
 const recursive = require('./recursiveTraversal');
 
+const filepreview = require('filepreview');
+
 const fs = require('fs');
 
 const app = express();
@@ -27,7 +29,7 @@ app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
 /** Template engine */
 const whiskers = require('whiskers');
 
-var rootDir = '/home/jeff/public/Movies/';
+var rootDir = '/home/jeff/work/aaSchool/Algo/online Lectures/';
 
 var serverURL = "http://localhost:5000";
 
@@ -101,6 +103,18 @@ function getVideosTemplateInformation(templateContext, request)
                 console.log(files);
                 files.forEach(file =>
                 {
+                    var splitArray = file.split('/');
+                    var name = splitArray[splitArray.length -1];
+
+                    if (!fs.existsSync('img/private/' + name + ".png"))
+                    {
+                        filepreview.generate(file, 'img/private/' + name + ".png", function(error) {
+                            if (error) {
+                                return console.log(error);
+                            }
+                            console.log('File preview is located ' + 'img/private/' + file + ".png");
+                        });
+                    }
                     videos.push({name: file.replace(rootDir, ''), length: "n/a"});
                 });
                 templateContext.videos = videos;
@@ -125,10 +139,55 @@ app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTe
 app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTemplateInfo));
 
 
+function isPublicVideo(videoURL)
+{
+    return false;
+}
+
+
+app.get('/icon/', function(request, result)
+{
+    try
+    {
+        const videoID = request.query.v;
+
+        const splitArray = videoID.split('/');
+        const name = splitArray[splitArray.length -1] + ".png";
+
+        var file="";
+
+        if(!isPublicVideo(videoID))
+        {
+            if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+            {
+                file = fs.readFileSync("img/private/" + name);
+            }
+            else
+            {
+                throw "Not logged in";
+            }
+        }
+        else
+        {
+            file = fs.readFileSync("img/public/" + name);
+        }
+
+        result.writeHead(200, {'Content-Type': 'image/png',
+            'Vary': 'Accept-Encoding'});
+        result.write(file);
+        result.end();
+    }
+    catch(error)
+    {
+        result.writeHead(404, {'Content-Type': 'text/html',
+            'Vary': 'Accept-Encoding'});
+        result.write("Nada");
+        result.end();
+    }
+});
+
 app.get('/video/', function(request, result)
 {
-    console.log("called");
-    console.log(request.query);
     if(checkPrivilege(request) >= PRIVILEGE.MEMBER || userUtils.isValidAPI(request.query.api, config))
     {
         var videoID = request.query.v;
