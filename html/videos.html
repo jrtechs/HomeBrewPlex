@@ -5,7 +5,7 @@
     <thead class="thead-dark">
     <tr>
         <td>Name</td>
-        <td>Length</td>
+        <td>Icon</td>
         <td>Watch</td>
     </tr>
     </thead>
@@ -13,7 +13,7 @@
         {for video in videos}
             <tr class="table_row">
                 <td>{video.name}</td>
-                <td>{video.length}</td>
+                <td><img src="/icon?v={video.name}" alt="Icon for {video.name}" height = 60px/></td>
                 <td>
                     <a href="/watch?v={video.name}" class="btn btn-secondary active" role="button" aria-pressed="true">View</a>
                 </td>

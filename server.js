@@ -105,14 +105,14 @@ function getVideosTemplateInformation(templateContext, request)
                 {
                     var splitArray = file.split('/');
                     var name = splitArray[splitArray.length -1];
-
-                    if (!fs.existsSync('img/private/' + name + ".png"))
+                    const icon = 'img/private/' + name + ".png";
+                    if (!fs.existsSync(icon))
                     {
-                        filepreview.generate(file, 'img/private/' + name + ".png", function(error) {
+                        filepreview.generate(file, icon, function(error) {
                             if (error) {
                                 return console.log(error);
                             }
-                            console.log('File preview is located ' + 'img/private/' + file + ".png");
+                            console.log('File preview is located ' + icon);
                         });
                     }
                     videos.push({name: file.replace(rootDir, ''), length: "n/a"});
