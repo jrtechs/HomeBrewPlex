@@ -17,7 +17,7 @@
                 <h3 class="text-center">Edit User</h3>
             </div>
             <div class="card-body">
-                <form action="/edituser" method ="post" class="p-2">
+                <form action="/user/edituser" method ="post" class="p-2">
                     <div class="form-group">
                         <input class="form-control" id="useridLabel" type="text" name="id" required>
                         <label>User ID</label>
@@ -56,7 +56,7 @@
                 <h4>Current API Key</h4>
                 <p id="apiDisplay"></p>
 
-                <form action="/revokeAPI" method ="post" class="p-2">
+                <form action="/user/revokeAPI" method ="post" class="p-2">
                     <input class="form-control" id="revokeAPIUsername" type="text" name="username" value="" hidden>
                     <div class="text-center">
                         <input type="submit" name="revoke_api" value="Generate New API Key"
@@ -98,7 +98,7 @@
                                 <button onclick="editHostForm({user.id}, '{user.username}', '{user.api}')" class="btn btn-secondary">Edit User</button>
                             </td>
                             <td>
-                                <form action="/removeuser" method ="post" >
+                                <form action="/user/removeuser" method ="post" >
                                     <input type="submit" name="submit" value="Delete" class="btn btn-secondary"/>
                                     <input type='hidden' name='id' value='{user.id}' />
                                 </form>
@@ -118,7 +118,7 @@
                     <h3 class="text-center">Add New User</h3>
                 </div>
                 <div class="card-body">
-                    <form action="/addUser" method ="post" class="p-2">
+                    <form action="/user/addUser" method ="post" class="p-2">
                         <div class="form-group">
                             <label> User Name
                                 <input class="form-control w-100" type="text" name="username" required>
@@ -153,7 +153,7 @@
                         <h3 class="text-center">Update Profile</h3>
                     </div>
                     <div class="card-body">
-                        <form action="/updateUser" method ="post" class="p-2">
+                        <form action="/user/updateUser" method ="post" class="p-2">
                             <div class="form-group">
                                 <input class="form-control" id="usernameLabel" type="text" name="username" value="{username}" required>
                                 <label>User Name</label>
@@ -181,7 +181,7 @@
                         <h4>Current API Key</h4>
                         <p>{apiKey}</p>
 
-                        <form action="/revokeAPI" method ="post" class="p-2">
+                        <form action="/user/revokeAPI" method ="post" class="p-2">
                             <div class="text-center">
                                 <input type="submit" name="revoke_api" value="Generate New API Key"
                                        class="btn btn-lg btn-secondary"/>

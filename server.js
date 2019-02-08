@@ -244,129 +244,129 @@ app.get('/video/', function(request, result)
 });
 
 
-app.post('/revokeAPI', function(request, result)
-{
-    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-    {
-        userUtils.revokeAPI(request.body.username, config);
-        request.session.API = userUtils.getAPIKEY(request.session.username, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-    }
-    else if (checkPrivilege(request) === PRIVILEGE.MEMBER)
-    {
-        userUtils.revokeAPI(request.session.username, config);
-        request.session.API = userUtils.getAPIKEY(request.session.username, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-    }
-    result.redirect('/users');
-});
+// app.post('/revokeAPI', function(request, result)
+// {
+//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//     {
+//         userUtils.revokeAPI(request.body.username, config);
+//         request.session.API = userUtils.getAPIKEY(request.session.username, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//     }
+//     else if (checkPrivilege(request) === PRIVILEGE.MEMBER)
+//     {
+//         userUtils.revokeAPI(request.session.username, config);
+//         request.session.API = userUtils.getAPIKEY(request.session.username, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//     }
+//     result.redirect('/users');
+// });
 
 
-app.post('/addUser', function(request, result)
-{
-    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-    {
-        console.log(request.body);
-        var admin = false;
-        if(request.body.admin === 'on')
-            admin = true;
-        userUtils.addUser(request.body.username, request.body.password,admin, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-        result.redirect('/users');
-    }
-    else
-    {
-        result.status(401);
-        result.send('None shall pass');
-    }
-});
+// app.post('/addUser', function(request, result)
+// {
+//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//     {
+//         console.log(request.body);
+//         var admin = false;
+//         if(request.body.admin === 'on')
+//             admin = true;
+//         userUtils.addUser(request.body.username, request.body.password,admin, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//         result.redirect('/users');
+//     }
+//     else
+//     {
+//         result.status(401);
+//         result.send('None shall pass');
+//     }
+// });
 
 
-app.post('/edituser', function(request, result)
-{
-    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-    {
-        var admin = false;
-        if(request.body.admin === 'on')
-            admin = true;
-        userUtils.editUser(request.body.id, request.body.username, request.body.password,admin, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-        result.redirect('/users');
-    }
-    else
-    {
-        result.status(401);
-        result.send('None shall pass');
-    }
-});
+// app.post('/edituser', function(request, result)
+// {
+//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//     {
+//         var admin = false;
+//         if(request.body.admin === 'on')
+//             admin = true;
+//         userUtils.editUser(request.body.id, request.body.username, request.body.password,admin, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//         result.redirect('/users');
+//     }
+//     else
+//     {
+//         result.status(401);
+//         result.send('None shall pass');
+//     }
+// });
 
 
-app.post('/updateUser', function(request, result)
-{
-    if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
-    {
-        console.log(request.session.userID);
-        var admin = false;
-        userUtils.editUser(request.session.userID, request.body.username, request.body.password,admin, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-        result.redirect('/users');
-    }
-    else
-    {
-        result.status(401);
-        result.send('None shall pass');
-    }
-});
+// app.post('/updateUser', function(request, result)
+// {
+//     if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+//     {
+//         console.log(request.session.userID);
+//         var admin = false;
+//         userUtils.editUser(request.session.userID, request.body.username, request.body.password,admin, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//         result.redirect('/users');
+//     }
+//     else
+//     {
+//         result.status(401);
+//         result.send('None shall pass');
+//     }
+// });
 
-const PRIVILEGE = {NOBODY: 0, MEMBER: 1, ADMIN: 2};
-const checkPrivilege = function(request)
-{
-    if(request.session.login !== true)
-        return PRIVILEGE.NOBODY;
-    else if(request.session.admin === true)
-        return PRIVILEGE.ADMIN;
-    return PRIVILEGE.MEMBER;
-};
+// const PRIVILEGE = {NOBODY: 0, MEMBER: 1, ADMIN: 2};
+// const checkPrivilege = function(request)
+// {
+//     if(request.session.login !== true)
+//         return PRIVILEGE.NOBODY;
+//     else if(request.session.admin === true)
+//         return PRIVILEGE.ADMIN;
+//     return PRIVILEGE.MEMBER;
+// };
 
-app.post('/removeuser', function(request, result)
-{
-    if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-    {
-        userUtils.removeUser(request.body.id, config);
-        fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-        result.redirect('/users');
-    }
-    else
-    {
-        result.status(401);
-        result.send('None shall pass');
-    }
-});
+// app.post('/removeuser', function(request, result)
+// {
+//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//     {
+//         userUtils.removeUser(request.body.id, config);
+//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
+//         result.redirect('/users');
+//     }
+//     else
+//     {
+//         result.status(401);
+//         result.send('None shall pass');
+//     }
+// });
 
-app.post('/logout', function(request, result)
-{
-    request.session.login = false;
-    request.session.admin = false;
-    result.redirect('/');
-});
+// app.post('/logout', function(request, result)
+// {
+//     request.session.login = false;
+//     request.session.admin = false;
+//     result.redirect('/');
+// });
 
 
 
-app.post('/login', function(request, result)
-{
-    if(userUtils.checkLogin(request.body.username, request.body.password, config))
-    {
-        request.session.login = true;
-        request.session.username = request.body.username;
-        request.session.userID = userUtils.getID(request.body.username, config);
-        request.session.API = userUtils.getAPIKEY(request.body.username, config);
-        if(userUtils.isAdmin(request.body.username, config))
-        {
-            request.session.admin = true;
-        }
-    }
-    result.redirect('/');
-});
+// app.post('/login', function(request, result)
+// {
+//     if(userUtils.checkLogin(request.body.username, request.body.password, config))
+//     {
+//         request.session.login = true;
+//         request.session.username = request.body.username;
+//         request.session.userID = userUtils.getID(request.body.username, config);
+//         request.session.API = userUtils.getAPIKEY(request.body.username, config);
+//         if(userUtils.isAdmin(request.body.username, config))
+//         {
+//             request.session.admin = true;
+//         }
+//     }
+//     result.redirect('/');
+// });
 
 
 app.listen(config.port, () => console.log(`App listening on port ${config.port}!`));

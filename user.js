@@ -1,6 +1,12 @@
 /** Crypto package used for hashing */
 const crypto = require('crypto');
 
+
+const configManager = require("./configManager");
+
+var users = configManager.getConfiguration().users;
+
+
 /**
  * Helper function to generate a hashed password
  * from a given plain text password.
@@ -52,13 +58,13 @@ const hashPassword = function(password, salt)
  * Fetches the index of the user in the configuration. If the
  * user does not exists a -1 is returned.
  */
-const getIndexOfUser = function(username, configuration)
+const getIndexOfUser = function(username)
 {
-    for(var i = 0; i < configuration.users.length; i++)
+    for(var i = 0; i < users.length; i++)
     {
-        if (username === configuration.users[i].username)
+        if (username === users[i].username)
         {
-            if(username === configuration.users[i].username)
+            if(username === users[i].username)
             {
                 return i;
             }
@@ -71,11 +77,11 @@ const getIndexOfUser = function(username, configuration)
 module.exports =
     {
 
-        isValidAPI: function(apiKey, configuration)
+        isValidAPI: function(apiKey)
         {
-            for(var i = 0; i < configuration.users.length; i++)
+            for(var i = 0; i < users.length; i++)
             {
-                if(configuration.users[i].api === apiKey)
+                if(users[i].api === apiKey)
                 {
                     return true;
                 }
@@ -83,41 +89,42 @@ module.exports =
             return false;
         },
 
-        isAdmin: function(username, configuration)
+        isAdmin: function(username)
         {
-            var index = getIndexOfUser(username, configuration);
+            var index = getIndexOfUser(username);
 
             if(index !== -1)
             {
-                return configuration.users[index].admin;
+                return users[index].admin;
             }
             return false;
         },
 
 
-        getID: function(username, configuration)
+        getID: function(username)
         {
-            var index = getIndexOfUser(username, configuration);
-            return configuration.users[index].id;
+            var index = getIndexOfUser(username);
+            return users[index].id;
         },
 
 
-        revokeAPI: function(username, configuration)
+        revokeAPI: function(username)
         {
-            var index = getIndexOfUser(username, configuration);
+            var index = getIndexOfUser(username);
 
             if(index !== -1)
             {
-                configuration.users[index].api = generateRandomAPIKey();
+                users[index].api = generateRandomAPIKey();
             }
+            configManager.syncToDisk();
         },
 
 
-        getAPIKEY: function(username, configuration)
+        getAPIKEY: function(username)
         {
-            var index = getIndexOfUser(username, configuration);
+            var index = getIndexOfUser(username);
             if(index !== -1)
-                return configuration.users[index].api;
+                return users[index].api;
             return 0;
         },
 
@@ -126,17 +133,16 @@ module.exports =
          *
          * @param username
          * @param password
-         * @param configuration
          * @returns {boolean}
          */
-        checkLogin: function(username, password, configuration)
+        checkLogin: function(username, password)
         {
-            const userIndex = getIndexOfUser(username, configuration);
+            const userIndex = getIndexOfUser(username);
             if(userIndex === -1)
                 return false;
 
-            const hashedPassword = hashPassword(password, configuration.users[userIndex].salt);
-            return configuration.users[userIndex].password == hashedPassword;
+            const hashedPassword = hashPassword(password, users[userIndex].salt);
+            return users[userIndex].password == hashedPassword;
         },
 
 
@@ -145,28 +151,29 @@ module.exports =
          *
          * @param username
          * @param password
-         * @param configuration
          * @returns {boolean}
          */
-        addUser: function(username, password, admin, configuration)
+        addUser: function(username, password, admin)
         {
-            const userIndex = getIndexOfUser(username, configuration);
+            const userIndex = getIndexOfUser(username);
             if(userIndex !== -1)
                 return false; // user already exists
 
             var newUser = new Object();
             newUser.username = username;
             newUser.api = generateRandomAPIKey();
-            if(configuration.users.length === 0)
+            if(users.length === 0)
                 newUser.id = 1;
             else
-                newUser.id = configuration.users[configuration.users.length -1].id + 1;
+                newUser.id = users[users.length -1].id + 1;
 
             const passObject = createHashedPasswordObject(password);
             newUser.salt = passObject.salt;
             newUser.password = passObject.pass;
             newUser.admin = admin;
-            configuration.users.push(newUser);
+            users.push(newUser);
+            configManager.syncToDisk();
+
             return true;
         },
 
@@ -177,36 +184,38 @@ module.exports =
          * @param id
          * @param userName
          * @param password
-         * @param configuration
          */
-        editUser: function(id, userName, password, admin, configuration)
+        editUser: function(id, userName, password, admin)
         {
-            for(var i = 0; i < configuration.users.length; i++)
+            for(var i = 0; i < users.length; i++)
             {
-                if (configuration.users[i].id=== id)
+                if (users[i].id=== id)
                 {
                     console.log("User account updated.");
-                    configuration.users[i].username = userName;
-                    configuration.users[i].admin = admin;
+                    users[i].username = userName;
+                    users[i].admin = admin;
 
                     var passObj = createHashedPasswordObject(password);
-                    configuration.users[i].salt = passObj.salt;
-                    configuration.users[i].password = passObj.pass;
+                    users[i].salt = passObj.salt;
+                    users[i].password = passObj.pass;
                 }
             }
+
+            configManager.syncToDisk();
         },
 
 
         /**
          * Removes a user account from the configuration
          * @param id
-         * @param configuration
          */
-        removeUser: function(id, configuration)
+        removeUser: function(id)
         {
-            configuration.users = configuration.users.filter(function(value, index, arr)
+            users = users.filter(function(value, index, arr)
             {
                 return value.id + "" !== id
             });
+
+            configManager.syncToDisk();
         }
     };
