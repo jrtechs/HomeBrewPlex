@@ -20,8 +20,6 @@ routes.get('/', (request, result) =>
         const splitArray = videoID.split('/');
         const name = splitArray[splitArray.length -1] + ".png";
 
-        console.log(name);
-
         var file="";
 
         if(!videoManager.isPublicVideo(videoID))
@@ -49,7 +47,6 @@ routes.get('/', (request, result) =>
     catch(error)
     {
         utils.printError(result, "Invalid Icon");
-        console.log(error);
     }
 });
 

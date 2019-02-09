@@ -71,6 +71,7 @@ module.exports =
             prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
             prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
             prom.push(fetchInTemplate(templateContext, "main", "./html/error.html"));
+            prom.push(fetchInTemplate(templateContext, "login","./html/login.html"));
             templateContext.errorMessage = errorMessage;
 
             Promise.all(prom).then(function(content)

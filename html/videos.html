@@ -9,10 +9,10 @@
 
 <div class="row">
     {for video in private}
-    <div class="col-md-4 videoElement">
+    <div class="col-md-3 videoElement p-2">
         <div class="card">
             <div class="card-header">
-                <h2>{video.name}</h2>
+                <h4>{video.name}</h4>
             </div>
             <div class="card-body">
                 <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">
@@ -23,10 +23,10 @@
     </div>
     {/for}
     {for video in public}
-    <div class="col-md-4 videoElement">
+    <div class="col-md-3 videoElement p-2">
         <div class="card">
             <div class="card-header">
-                <h2>{video.name}</h2>
+                <h4>{video.name}</h4>
             </div>
             <div class="card-body">
                 <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">

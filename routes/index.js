@@ -30,4 +30,10 @@ routes.get('/', (request, result) =>
     utils.renderHTML(request, result, "home.html", getHomePageInformation)
 });
 
+
+routes.get('*', (request, result) =>
+{
+    utils.printError(result, "Page not found.");
+});
+
 module.exports = routes;

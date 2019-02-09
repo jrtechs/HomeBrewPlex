@@ -18,7 +18,6 @@ module.exports =
             {
                 recursive(rootDir, function (err, files)
                 {
-                    console.log(files);
                     files.forEach(file =>
                     {
                         var splitArray = file.split('/');
@@ -28,7 +27,8 @@ module.exports =
                         {
                             var options = {
                                 width: 200,
-                                quality: 50
+                                quality: 50,
+                                previewTime: '00:05:00.000'
                             };
 
                             filepreview.generate(file, icon, options,function(error) {
@@ -44,7 +44,7 @@ module.exports =
                 });
             }).catch(function(error)
             {
-                console.log(error);
+                //console.log(error);
             })
         },
 
