@@ -10,13 +10,14 @@ const filepreview = require('filepreview');
 
 const fs = require('fs');
 
-var videos = null;
+var privateVideos = null;
 
-function getVideosTemplateInformation(templateContext, request)
+var publicVideos = null;
+
+function getVideosForTemplate(templateContext, rootDir, templateKey, videos)
 {
     if(videos === null)
     {
-        const rootDir = configManager.getRootDirectory();
         videos = [];
         return new Promise(function(resolve, reject)
         {
@@ -27,7 +28,7 @@ function getVideosTemplateInformation(templateContext, request)
                 {
                     var splitArray = file.split('/');
                     var name = splitArray[splitArray.length -1];
-                    const icon = 'img/private/' + name + ".png";
+                    const icon = 'img/' + templateKey + '/' + name + ".png";
                     if (!fs.existsSync(icon))
                     {
                         filepreview.generate(file, icon, function(error) {
@@ -37,17 +38,40 @@ function getVideosTemplateInformation(templateContext, request)
                             console.log('File preview is located ' + icon);
                         });
                     }
-                    videos.push({name: file.replace(rootDir, ''), length: "n/a"});
+                    videos.push({name: file.replace(rootDir, '')});
                 });
-                templateContext.videos = videos;
+                templateContext[templateKey] = videos;
                 resolve();
             });
         })
     }
     else
     {
-        templateContext.videos = videos;
+        templateContext[templateKey] = videos;
     }
+}
+
+
+function getVideosTemplateInformation(templateContext, request)
+{
+    var promises = [];
+
+    const rootDir = configManager.getRootDirectory();
+
+    const rootPublicDir = configManager.getPublicDirectory();
+
+    if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER)
+    {
+        promises.push(getVideosForTemplate(templateContext, rootDir, "private", privateVideos));
+    }
+    else
+    {
+        templateContext["private"] = [];
+    }
+
+    promises.push(getVideosForTemplate(templateContext, rootPublicDir, "public", publicVideos));
+
+    return Promise.all(promises);
 }
 
 routes.get('/', (request, result) =>

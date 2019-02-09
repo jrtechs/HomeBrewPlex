@@ -16,6 +16,10 @@ routes.post('/', (request, result) =>
         userUtils.revokeAPI(request.session.username);
         request.session.API = userUtils.getAPIKEY(request.session.username);
     }
+    else
+    {
+        utils.printError(result, "You need to be logged in");
+    }
     result.redirect('/user');
 });
 

@@ -8,7 +8,21 @@
 <br>
 
 <div class="row">
-    {for video in videos}
+    {for video in private}
+    <div class="col-md-4 videoElement">
+        <div class="card">
+            <div class="card-header">
+                <h2>{video.name}</h2>
+            </div>
+            <div class="card-body">
+                <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">
+                    <img src="/icon?v={video.name}" alt="Icon for {video.name}" width=100%/>
+                </a>
+            </div>
+        </div>
+    </div>
+    {/for}
+    {for video in public}
     <div class="col-md-4 videoElement">
         <div class="card">
             <div class="card-header">

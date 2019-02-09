@@ -55,9 +55,7 @@ routes.get('/', (request, result) =>
     }
     else
     {
-        console.log("invalid attempt to view video");
-        result.status(401);
-        result.send('None shall pass');
+        utils.printError(result, "You need to be logged in");
     }
 });
 

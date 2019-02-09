@@ -20,6 +20,11 @@ module.exports=
             return "/home/jeff/work/aaSchool/Algo/online Lectures/";
         },
 
+        getPublicDirectory: function()
+        {
+            return "/home/jeff/work/aaSchool/Algo/online Lectures/";
+        },
+
         getServerURL: function()
         {
             return "http://localhost:5000";

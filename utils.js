@@ -28,14 +28,15 @@ module.exports =
                 templateContext.loggedIn = true;
                 if(module.exports.checkPrivilege(request) === PRIVILEGE.ADMIN)
                     templateContext.admin = true;
-                if(templateDependencyFunction !== null)
-                    prom.push(templateDependencyFunction(templateContext, request));
-                prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
             }
             else
             {
                 prom.push(fetchInTemplate(templateContext, "login","./html/login.html"));
             }
+
+            if(templateDependencyFunction !== null)
+                prom.push(templateDependencyFunction(templateContext, request));
+            prom.push(fetchInTemplate(templateContext, "main","./html/" + templateFile));
 
             Promise.all(prom).then(function(content)
             {
@@ -59,5 +60,23 @@ module.exports =
             else if(request.session.admin === true)
                 return module.exports.PRIVILEGE.ADMIN;
             return module.exports.RIVILEGE.MEMBER;
+        },
+
+        printError: function(result, errorMessage)
+        {
+            var templateContext = Object();
+            var prom = [];
+
+            prom.push(fileIO.getFile("./html/mainTemplate.html"));
+            prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
+            prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
+            prom.push(fetchInTemplate(templateContext, "main", "./html/error.html"));
+            templateContext.errorMessage = errorMessage;
+
+            Promise.all(prom).then(function(content)
+            {
+                result.write(whiskers.render(content[0], templateContext));
+                result.end();
+            });
         }
     };

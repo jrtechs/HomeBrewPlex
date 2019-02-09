@@ -26,16 +26,17 @@ routes.get('/', (request, result) =>
         {
             if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER)
             {
-                file = fs.readFileSync("./img/private/" + name);
+                file = fs.readFileSync("./icon/private/" + name);
             }
             else
             {
+                utils.printError(result, "You need to be logged in");
                 throw "Not logged in";
             }
         }
         else
         {
-            file = fs.readFileSync("./img/public/" + name);
+            file = fs.readFileSync("./icon/public/" + name);
         }
 
         result.writeHead(200, {'Content-Type': 'image/png',
@@ -45,10 +46,8 @@ routes.get('/', (request, result) =>
     }
     catch(error)
     {
-        result.writeHead(404, {'Content-Type': 'text/html',
-            'Vary': 'Accept-Encoding'});
-        result.write("Nada");
-        result.end();
+        utils.printError(result, "Invalid Icon");
+        console.log(error);
     }
 });
 
