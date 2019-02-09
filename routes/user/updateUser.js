@@ -14,8 +14,7 @@ routes.post('/', (request, result) =>
     }
     else
     {
-        result.status(401);
-        result.send('None shall pass');
+        utils.printError(result, "You need to be logged in");
     }
 });
 

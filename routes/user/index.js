@@ -40,7 +40,15 @@ function getUserInformation(templateContext, request)
 
 routes.get('/', (request, result) =>
 {
-    utils.renderHTML(request, result, "users.html", getUserInformation);
+    if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER)
+    {
+        utils.renderHTML(request, result, "users.html", getUserInformation);
+    }
+    else
+    {
+        utils.printError(result, "You need to be logged in");
+    }
+
 });
 
 module.exports = routes;

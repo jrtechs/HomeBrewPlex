@@ -23,6 +23,12 @@ npm install express-session --save
 npm install whiskers --save
 ```
 
+Dependencies
+
+```bash
+$apt-get install ffmpeg
+```
+
 
 Codacs which don't work
 H.265 

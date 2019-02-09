@@ -8,11 +8,25 @@
 <br>
 
 <div class="row">
-    {for video in videos}
-    <div class="col-md-4 videoElement">
+    {for video in private}
+    <div class="col-md-3 videoElement p-2">
         <div class="card">
             <div class="card-header">
-                <h2>{video.name}</h2>
+                <h4>{video.name}</h4>
+            </div>
+            <div class="card-body">
+                <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">
+                    <img src="/icon?v={video.name}" alt="Icon for {video.name}" width=100%/>
+                </a>
+            </div>
+        </div>
+    </div>
+    {/for}
+    {for video in public}
+    <div class="col-md-3 videoElement p-2">
+        <div class="card">
+            <div class="card-header">
+                <h4>{video.name}</h4>
             </div>
             <div class="card-body">
                 <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">

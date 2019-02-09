@@ -4,6 +4,8 @@ const utils = require("../utils");
 
 const fs = require('fs');
 
+const videoManager = require('../videoManager');
+
 function isPublicVideo(videoURL)
 {
     return false;
@@ -18,24 +20,23 @@ routes.get('/', (request, result) =>
         const splitArray = videoID.split('/');
         const name = splitArray[splitArray.length -1] + ".png";
 
-        console.log(name);
-
         var file="";
 
-        if(!isPublicVideo(videoID))
+        if(!videoManager.isPublicVideo(videoID))
         {
             if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER)
             {
-                file = fs.readFileSync("./img/private/" + name);
+                file = fs.readFileSync("./icon/private/" + name);
             }
             else
             {
+                utils.printError(result, "You need to be logged in");
                 throw "Not logged in";
             }
         }
         else
         {
-            file = fs.readFileSync("./img/public/" + name);
+            file = fs.readFileSync("./icon/public/" + name);
         }
 
         result.writeHead(200, {'Content-Type': 'image/png',
@@ -45,10 +46,7 @@ routes.get('/', (request, result) =>
     }
     catch(error)
     {
-        result.writeHead(404, {'Content-Type': 'text/html',
-            'Vary': 'Accept-Encoding'});
-        result.write("Nada");
-        result.end();
+        utils.printError(result, "Invalid Icon");
     }
 });
 

@@ -1,0 +1,28 @@
+{
+  "name": "HomeBrewPlex",
+  "version": "0.1.0",
+  "description": "Light weight alternative for Plex",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrtechs/HomeBrewPlex.git"
+  },
+  "author": "Jeffery Russell",
+  "license": "MPL 2.0",
+  "bugs": {
+    "url": "https://github.com/jrtechs/HomeBrewPlex/issues"
+  },
+  "homepage": "https://github.com/jrtechs/HomeBrewPlex#readme",
+  "dependencies": {
+    "download-file": "^0.1.5",
+    "express-session": "^1.15.6",
+    "fs": "0.0.2",
+    "path": "^0.12.7",
+    "url": "^0.11.0",
+    "whiskers": "^0.4.0"
+  }
+}
