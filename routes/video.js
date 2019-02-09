@@ -8,14 +8,19 @@ const configManager = require("../configManager");
 
 const fs = require('fs');
 
+const videoManager = require("../videoManager");
+
 routes.get('/', (request, result) =>
 {
+    var videoID = request.query.v;
+
     if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER ||
-        userUtils.isValidAPI(request.query.api))
+        userUtils.isValidAPI(request.query.api) ||
+        videoManager.isPublicVideo(videoID))
     {
         const rootDir = configManager.getRootDirectory();
 
-        var videoID = request.query.v;
+
         const path = rootDir + videoID;
         const stat = fs.statSync(path);
         const fileSize = stat.size;

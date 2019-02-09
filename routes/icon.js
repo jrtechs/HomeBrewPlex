@@ -4,6 +4,8 @@ const utils = require("../utils");
 
 const fs = require('fs');
 
+const videoManager = require('../videoManager');
+
 function isPublicVideo(videoURL)
 {
     return false;
@@ -22,7 +24,7 @@ routes.get('/', (request, result) =>
 
         var file="";
 
-        if(!isPublicVideo(videoID))
+        if(!videoManager.isPublicVideo(videoID))
         {
             if(utils.checkPrivilege(request) >= utils.PRIVILEGE.MEMBER)
             {

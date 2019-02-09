@@ -17,7 +17,7 @@ module.exports=
 
         getRootDirectory: function()
         {
-            return "/home/jeff/work/aaSchool/Algo/online Lectures/";
+            return "/home/jeff/public/Shows/Rick And Morty/Season 1";
         },
 
         getPublicDirectory: function()
