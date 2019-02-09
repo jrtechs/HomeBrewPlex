@@ -1,7 +1,11 @@
+const fileIO = require('./fileIO');
+
+
 function fetchInTemplate(templateContext, templateKey, filename)
 {
     templateContext[templateKey] = fileIO.getFile(filename);
 }
+
 
 
 const PRIVILEGE = {NOBODY: 0, MEMBER: 1, ADMIN: 2};
@@ -19,10 +23,10 @@ module.exports =
             prom.push(fileIO.getFile("./html/mainTemplate.html"));
             prom.push(fetchInTemplate(templateContext, "header", "./html/header.html"));
             prom.push(fetchInTemplate(templateContext, "footer", "./html/footer.html"));
-            if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+            if(module.exports.checkPrivilege(request) >= PRIVILEGE.MEMBER)
             {
                 templateContext.loggedIn = true;
-                if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+                if(module.exports.checkPrivilege(request) === PRIVILEGE.ADMIN)
                     templateContext.admin = true;
                 if(templateDependencyFunction !== null)
                     prom.push(templateDependencyFunction(templateContext, request));

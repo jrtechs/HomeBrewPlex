@@ -116,6 +116,8 @@ module.exports =
             {
                 users[index].api = generateRandomAPIKey();
             }
+            console.log(users);
+            configManager.getConfiguration().users = users;
             configManager.syncToDisk();
         },
 
@@ -172,8 +174,9 @@ module.exports =
             newUser.password = passObject.pass;
             newUser.admin = admin;
             users.push(newUser);
-            configManager.syncToDisk();
 
+            configManager.getConfiguration().users = users;
+            configManager.syncToDisk();
             return true;
         },
 
@@ -189,7 +192,7 @@ module.exports =
         {
             for(var i = 0; i < users.length; i++)
             {
-                if (users[i].id=== id)
+                if (users[i].id + "" === id)
                 {
                     console.log("User account updated.");
                     users[i].username = userName;
@@ -200,7 +203,7 @@ module.exports =
                     users[i].password = passObj.pass;
                 }
             }
-
+            configManager.getConfiguration().users = users;
             configManager.syncToDisk();
         },
 
@@ -215,7 +218,7 @@ module.exports =
             {
                 return value.id + "" !== id
             });
-
+            configManager.getConfiguration().users = users;
             configManager.syncToDisk();
         }
     };

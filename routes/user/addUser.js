@@ -13,7 +13,7 @@ routes.post('/', (request, result) =>
         if(request.body.admin === 'on')
             admin = true;
         userUtils.addUser(request.body.username, request.body.password,admin);
-        result.redirect('/users');
+        result.redirect('/user');
     }
     else
     {

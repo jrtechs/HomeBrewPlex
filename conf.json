@@ -1,0 +1,22 @@
+{
+    "port": 5000,
+    "sessionSecret": "super_duper_secret_secret",
+    "users": [
+        {
+            "username": "jeff",
+            "password": "bb75cb47ec1c1132d25bf2afbc3e10ea0181748c9bdef8e0909f2cbabd4cad57",
+            "id": 1,
+            "salt": "4a9cbd94309329e9591b60a3def16d10724cb89444deee357a3eb0dd1e95d683",
+            "admin": true,
+            "api": "39c75cfe9b367ccf2bf1fe5451e1f7a966f653abb827db6bb96a2f532776df49"
+        },
+        {
+            "username": "josh",
+            "api": "5fb6cc61e5589b302b7383d98e7412cde8d04491a6e5d765445d334331a752e7",
+            "id": 2,
+            "salt": "4d7159f4d6aa4ee3467a13ef7a7a3ec17ae4b560756673c21eeee8bc887ab3c9",
+            "password": "320142ed202563b462b744f221cbc236cb042efda47b550395a32920f0dd937c",
+            "admin": false
+        }
+    ]
+}

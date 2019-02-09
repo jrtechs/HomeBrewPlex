@@ -10,7 +10,7 @@ routes.post('/', (request, result) =>
     {
         var admin = false;
         userUtils.editUser(request.session.userID, request.body.username, request.body.password,admin);
-        result.redirect('/users');
+        result.redirect('/user');
     }
     else
     {

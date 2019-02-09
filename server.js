@@ -8,30 +8,36 @@ const fileIO = require('./fileIO');
 
 const userUtils = require('./user.js');
 
+const configLoader = require('./configManager.js');
+
 const recursive = require('./recursiveTraversal');
 
 const filepreview = require('filepreview');
 
 const fs = require('fs');
 
-const routes = require('./routes');
+
 
 
 
 const app = express();
 
-
-app.use('/', routes);
+/**Initializes sessions for login */
+app.use(session({ secret: configLoader.getConfiguration().sessionSecret, cookie: { maxAge: 6000000 }}));
 
 app.use(express.urlencoded());
 app.use(express.json());      // if needed
 
+const routes = require('./routes');
+app.use('/', routes);
 
-const CONFIG_FILE_NAME = "conf.json";
-const config = fileIO.getFileAsJSON(CONFIG_FILE_NAME);
 
-/**Initializes sessions for login */
-app.use(session({ secret: config.sessionSecret, cookie: { maxAge: 6000000 }}));
+
+
+// const CONFIG_FILE_NAME = "conf.json";
+// const config = fileIO.getFileAsJSON(CONFIG_FILE_NAME);
+
+
 
 // /** Template engine */
 // const whiskers = require('whiskers');
@@ -74,13 +80,13 @@ var serverURL = "http://localhost:5000";
 //     });
 // }
 
-function getUserInformation(templateContext, request)
-{
-    templateContext.users = config.users;
-    templateContext.apiKey = request.session.API;
-    templateContext.id = request.session.userID;
-    templateContext.username = request.session.username;
-}
+// function getUserInformation(templateContext, request)
+// {
+//     templateContext.users = configLoader.getConfiguration().users;
+//     templateContext.apiKey = request.session.API;
+//     templateContext.id = request.session.userID;
+//     templateContext.username = request.session.username;
+// }
 
 // function getHomePageInformation(templateContext, request)
 // {
@@ -369,4 +375,4 @@ app.get('/video/', function(request, result)
 // });
 
 
-app.listen(config.port, () => console.log(`App listening on port ${config.port}!`));
+app.listen(configLoader.getConfiguration().port, () => console.log(`App listening on port ${configLoader.getConfiguration().port}!`));

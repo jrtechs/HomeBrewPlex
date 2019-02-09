@@ -8,15 +8,15 @@ routes.post('/', (request, result) =>
 {
     if(utils.checkPrivilege(request) === utils.PRIVILEGE.ADMIN)
     {
-        userUtils.revokeAPI(request.body.username, config);
+        userUtils.revokeAPI(request.body.username);
         request.session.API = userUtils.getAPIKEY(request.session.username);
     }
-    else if (checkPrivilege(request) === PRIVILEGE.MEMBER)
+    else if (utils.checkPrivilege(request) === PRIVILEGE.MEMBER)
     {
         userUtils.revokeAPI(request.session.username);
         request.session.API = userUtils.getAPIKEY(request.session.username);
     }
-    result.redirect('/users');
+    result.redirect('/user');
 });
 
 module.exports = routes;

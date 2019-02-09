@@ -12,8 +12,8 @@ routes.get('/videos', videos);
 const watch = require('./watch');
 routes.get('/watch', watch);
 
-const users = require('./users');
-routes.get('/users', users);
+const user = require('./user');
+routes.use('/user', user);
 
 
 const utils = require("../utils");
