@@ -1,16 +1,16 @@
 const routes = require('express').Router();
 
 const icon = require('./icon');
-routes.get('/icon', icon);
+routes.use('/icon', icon);
 
 const video = require('./video');
-routes.get('/video', video);
+routes.use('/video', video);
 
 const videos = require('./videos');
-routes.get('/videos', videos);
+routes.use('/videos', videos);
 
 const watch = require('./watch');
-routes.get('/watch', watch);
+routes.use('/watch', watch);
 
 const user = require('./user');
 routes.use('/user', user);

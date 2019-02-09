@@ -10,9 +10,9 @@ const userUtils = require('./user.js');
 
 const configLoader = require('./configManager.js');
 
-const recursive = require('./recursiveTraversal');
-
-const filepreview = require('filepreview');
+// const recursive = require('./recursiveTraversal');
+//
+// const filepreview = require('filepreview');
 
 const fs = require('fs');
 
@@ -42,9 +42,9 @@ app.use('/', routes);
 // /** Template engine */
 // const whiskers = require('whiskers');
 
-var rootDir = '/home/jeff/work/aaSchool/Algo/online Lectures/';
+// var rootDir = '/home/jeff/work/aaSchool/Algo/online Lectures/';
 
-var serverURL = "http://localhost:5000";
+// var serverURL = "http://localhost:5000";
 
 // function fetchInTemplate(templateContext, templateKey, filename)
 // {
@@ -102,276 +102,151 @@ app.use(express.static('img'));
 
 
 
-var videos = null;
+// var videos = null;
+//
+// function getVideosTemplateInformation(templateContext, request)
+// {
+//     if(videos === null)
+//     {
+//         videos = [];
+//         return new Promise(function(resolve, reject)
+//         {
+//             recursive(rootDir, function (err, files)
+//             {
+//                 console.log(files);
+//                 files.forEach(file =>
+//                 {
+//                     var splitArray = file.split('/');
+//                     var name = splitArray[splitArray.length -1];
+//                     const icon = 'img/private/' + name + ".png";
+//                     if (!fs.existsSync(icon))
+//                     {
+//                         filepreview.generate(file, icon, function(error) {
+//                             if (error) {
+//                                 return console.log(error);
+//                             }
+//                             console.log('File preview is located ' + icon);
+//                         });
+//                     }
+//                     videos.push({name: file.replace(rootDir, ''), length: "n/a"});
+//                 });
+//                 templateContext.videos = videos;
+//                 resolve();
+//             });
+//         })
+//     }
+//     else
+//     {
+//         templateContext.videos = videos;
+//     }
+// }
 
-function getVideosTemplateInformation(templateContext, request)
-{
-    if(videos === null)
-    {
-        videos = [];
-        return new Promise(function(resolve, reject)
-        {
-            recursive(rootDir, function (err, files)
-            {
-                console.log(files);
-                files.forEach(file =>
-                {
-                    var splitArray = file.split('/');
-                    var name = splitArray[splitArray.length -1];
-                    const icon = 'img/private/' + name + ".png";
-                    if (!fs.existsSync(icon))
-                    {
-                        filepreview.generate(file, icon, function(error) {
-                            if (error) {
-                                return console.log(error);
-                            }
-                            console.log('File preview is located ' + icon);
-                        });
-                    }
-                    videos.push({name: file.replace(rootDir, ''), length: "n/a"});
-                });
-                templateContext.videos = videos;
-                resolve();
-            });
-        })
-    }
-    else
-    {
-        templateContext.videos = videos;
-    }
-}
-
-function getVideoTemplateInfo(templateContext, request)
-{
-    templateContext.api = request.session.API;
-    templateContext.serverURL = serverURL;
-    templateContext.videoURL = request.query.v.split(" ").join("%20");
-}
+// function getVideoTemplateInfo(templateContext, request)
+// {
+//     templateContext.api = request.session.API;
+//     templateContext.serverURL = serverURL;
+//     templateContext.videoURL = request.query.v.split(" ").join("%20");
+// }
 
 // app.get('/videos', (req, res) => renderHTML(req, res, "videos.html", getVideosTemplateInformation));
 // app.get('/watch', (req, res) => renderHTML(req, res, "watch.html", getVideoTemplateInfo));
 
 
-function isPublicVideo(videoURL)
-{
-    return false;
-}
-
-
-app.get('/icon/', function(request, result)
-{
-    try
-    {
-        const videoID = request.query.v;
-
-        const splitArray = videoID.split('/');
-        const name = splitArray[splitArray.length -1] + ".png";
-
-        var file="";
-
-        if(!isPublicVideo(videoID))
-        {
-            if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
-            {
-                file = fs.readFileSync("img/private/" + name);
-            }
-            else
-            {
-                throw "Not logged in";
-            }
-        }
-        else
-        {
-            file = fs.readFileSync("img/public/" + name);
-        }
-
-        result.writeHead(200, {'Content-Type': 'image/png',
-            'Vary': 'Accept-Encoding'});
-        result.write(file);
-        result.end();
-    }
-    catch(error)
-    {
-        result.writeHead(404, {'Content-Type': 'text/html',
-            'Vary': 'Accept-Encoding'});
-        result.write("Nada");
-        result.end();
-    }
-});
-
-app.get('/video/', function(request, result)
-{
-    if(checkPrivilege(request) >= PRIVILEGE.MEMBER || userUtils.isValidAPI(request.query.api, config))
-    {
-        var videoID = request.query.v;
-        const path = rootDir + videoID;
-        const stat = fs.statSync(path);
-        const fileSize = stat.size;
-        const range = request.headers.range;
-
-        if (range)
-        {
-            const parts = range.replace(/bytes=/, "").split("-");
-            const start = parseInt(parts[0], 10);
-            const end = parts[1]
-                ? parseInt(parts[1], 10)
-                : fileSize-1;
-
-            const chunksize = (end-start)+1;
-            const file = fs.createReadStream(path, {start, end});
-            const head =
-                {
-                    'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                    'Accept-Ranges': 'bytes',
-                    'Content-Length': chunksize,
-                    'Content-Type': 'video/mp4',
-                };
-            result.writeHead(206, head);
-            file.pipe(result);
-        }
-        else
-        {
-            const head =
-                {
-                    'Content-Length': fileSize,
-                    'Content-Type': 'video/mp4',
-                };
-
-            result.writeHead(200, head);
-            fs.createReadStream(path).pipe(result);
-        }
-    }
-    else
-    {
-        console.log("invalid attempt to view video");
-        result.status(401);
-        result.send('None shall pass');
-    }
-});
-
-
-// app.post('/revokeAPI', function(request, result)
+// function isPublicVideo(videoURL)
 // {
-//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-//     {
-//         userUtils.revokeAPI(request.body.username, config);
-//         request.session.API = userUtils.getAPIKEY(request.session.username, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//     }
-//     else if (checkPrivilege(request) === PRIVILEGE.MEMBER)
-//     {
-//         userUtils.revokeAPI(request.session.username, config);
-//         request.session.API = userUtils.getAPIKEY(request.session.username, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//     }
-//     result.redirect('/users');
-// });
+//     return false;
+// }
 
-
-// app.post('/addUser', function(request, result)
+//
+// app.get('/icon/', function(request, result)
 // {
-//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
+//     try
 //     {
-//         console.log(request.body);
-//         var admin = false;
-//         if(request.body.admin === 'on')
-//             admin = true;
-//         userUtils.addUser(request.body.username, request.body.password,admin, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//         result.redirect('/users');
-//     }
-//     else
-//     {
-//         result.status(401);
-//         result.send('None shall pass');
-//     }
-// });
-
-
-// app.post('/edituser', function(request, result)
-// {
-//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-//     {
-//         var admin = false;
-//         if(request.body.admin === 'on')
-//             admin = true;
-//         userUtils.editUser(request.body.id, request.body.username, request.body.password,admin, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//         result.redirect('/users');
-//     }
-//     else
-//     {
-//         result.status(401);
-//         result.send('None shall pass');
-//     }
-// });
-
-
-// app.post('/updateUser', function(request, result)
-// {
-//     if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
-//     {
-//         console.log(request.session.userID);
-//         var admin = false;
-//         userUtils.editUser(request.session.userID, request.body.username, request.body.password,admin, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//         result.redirect('/users');
-//     }
-//     else
-//     {
-//         result.status(401);
-//         result.send('None shall pass');
-//     }
-// });
-
-// const PRIVILEGE = {NOBODY: 0, MEMBER: 1, ADMIN: 2};
-// const checkPrivilege = function(request)
-// {
-//     if(request.session.login !== true)
-//         return PRIVILEGE.NOBODY;
-//     else if(request.session.admin === true)
-//         return PRIVILEGE.ADMIN;
-//     return PRIVILEGE.MEMBER;
-// };
-
-// app.post('/removeuser', function(request, result)
-// {
-//     if(checkPrivilege(request) === PRIVILEGE.ADMIN)
-//     {
-//         userUtils.removeUser(request.body.id, config);
-//         fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
-//         result.redirect('/users');
-//     }
-//     else
-//     {
-//         result.status(401);
-//         result.send('None shall pass');
-//     }
-// });
-
-// app.post('/logout', function(request, result)
-// {
-//     request.session.login = false;
-//     request.session.admin = false;
-//     result.redirect('/');
-// });
-
-
-
-// app.post('/login', function(request, result)
-// {
-//     if(userUtils.checkLogin(request.body.username, request.body.password, config))
-//     {
-//         request.session.login = true;
-//         request.session.username = request.body.username;
-//         request.session.userID = userUtils.getID(request.body.username, config);
-//         request.session.API = userUtils.getAPIKEY(request.body.username, config);
-//         if(userUtils.isAdmin(request.body.username, config))
+//         const videoID = request.query.v;
+//
+//         const splitArray = videoID.split('/');
+//         const name = splitArray[splitArray.length -1] + ".png";
+//
+//         var file="";
+//
+//         if(!isPublicVideo(videoID))
 //         {
-//             request.session.admin = true;
+//             if(checkPrivilege(request) >= PRIVILEGE.MEMBER)
+//             {
+//                 file = fs.readFileSync("img/private/" + name);
+//             }
+//             else
+//             {
+//                 throw "Not logged in";
+//             }
+//         }
+//         else
+//         {
+//             file = fs.readFileSync("img/public/" + name);
+//         }
+//
+//         result.writeHead(200, {'Content-Type': 'image/png',
+//             'Vary': 'Accept-Encoding'});
+//         result.write(file);
+//         result.end();
+//     }
+//     catch(error)
+//     {
+//         result.writeHead(404, {'Content-Type': 'text/html',
+//             'Vary': 'Accept-Encoding'});
+//         result.write("Nada");
+//         result.end();
+//     }
+// });
+
+// app.get('/video/', function(request, result)
+// {
+//     if(checkPrivilege(request) >= PRIVILEGE.MEMBER || userUtils.isValidAPI(request.query.api, config))
+//     {
+//         var videoID = request.query.v;
+//         const path = rootDir + videoID;
+//         const stat = fs.statSync(path);
+//         const fileSize = stat.size;
+//         const range = request.headers.range;
+//
+//         if (range)
+//         {
+//             const parts = range.replace(/bytes=/, "").split("-");
+//             const start = parseInt(parts[0], 10);
+//             const end = parts[1]
+//                 ? parseInt(parts[1], 10)
+//                 : fileSize-1;
+//
+//             const chunksize = (end-start)+1;
+//             const file = fs.createReadStream(path, {start, end});
+//             const head =
+//                 {
+//                     'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+//                     'Accept-Ranges': 'bytes',
+//                     'Content-Length': chunksize,
+//                     'Content-Type': 'video/mp4',
+//                 };
+//             result.writeHead(206, head);
+//             file.pipe(result);
+//         }
+//         else
+//         {
+//             const head =
+//                 {
+//                     'Content-Length': fileSize,
+//                     'Content-Type': 'video/mp4',
+//                 };
+//
+//             result.writeHead(200, head);
+//             fs.createReadStream(path).pipe(result);
 //         }
 //     }
-//     result.redirect('/');
+//     else
+//     {
+//         console.log("invalid attempt to view video");
+//         result.status(401);
+//         result.send('None shall pass');
+//     }
 // });
 
 

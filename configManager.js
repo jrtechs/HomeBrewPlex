@@ -15,6 +15,16 @@ module.exports=
                 fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
                 // console.log(config);
                 // console.log("Config Updated");
+        },
+
+        getRootDirectory: function()
+        {
+                return "/home/jeff/work/aaSchool/Algo/online Lectures/";
+        },
+
+        getServerURL: function()
+        {
+                return "http://localhost:5000";
         }
 
 };

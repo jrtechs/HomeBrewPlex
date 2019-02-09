@@ -116,7 +116,6 @@ module.exports =
             {
                 users[index].api = generateRandomAPIKey();
             }
-            console.log(users);
             configManager.getConfiguration().users = users;
             configManager.syncToDisk();
         },
