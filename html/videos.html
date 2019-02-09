@@ -1,26 +1,28 @@
 <script src="../server.js"></script><h1 class="text-center">Videos</h1>
 
+<div class="row">
+    <center><h1>Videos</h1></center>
+</div>
+
 <input id="videoFilter" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-<table class="table table-striped">
-    <thead class="thead-dark">
-    <tr>
-        <td>Name</td>
-        <td>Icon</td>
-        <td>Watch</td>
-    </tr>
-    </thead>
-    <tbody id="movieTable">
-        {for video in videos}
-            <tr class="table_row">
-                <td>{video.name}</td>
-                <td><img src="/icon?v={video.name}" alt="Icon for {video.name}" height = 60px/></td>
-                <td>
-                    <a href="/watch?v={video.name}" class="btn btn-secondary active" role="button" aria-pressed="true">View</a>
-                </td>
-            </tr>
-        {/for}
-    </tbody>
-</table>
+<br>
+
+<div class="row">
+    {for video in videos}
+    <div class="col-md-4 videoElement">
+        <div class="card">
+            <div class="card-header">
+                <h2>{video.name}</h2>
+            </div>
+            <div class="card-body">
+                <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">
+                    <img src="/icon?v={video.name}" alt="Icon for {video.name}" width=100%/>
+                </a>
+            </div>
+        </div>
+    </div>
+    {/for}
+</div>
 
 
 <script>
@@ -28,9 +30,9 @@
     {
         var input = $("input#videoFilter").val().toLowerCase();
 
-        $(".table_row").css({"display": "none"});
+        $(".videoElement").css({"display": "none"});
 
-        $(".table_row").each(function(index)
+        $(".videoElement").each(function(index)
         {
             if($(this).text().toLowerCase().includes(input))
             {
@@ -41,7 +43,7 @@
 
         if(input.toString().split(" ").join("") === "")
         {
-            $(".satellite_row").toggle(true);
+            $(".videoElement").toggle(true);
         }
     }
 
