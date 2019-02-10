@@ -14,7 +14,7 @@
             <div class="card-header">
                 <h4>{video.name}</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body w-100">
                 <a href="/watch?v={video.name}" class="" role="button" aria-pressed="true">
                     <img src="/icon?v={video.name}" alt="Icon for {video.name}" width=100%/>
                 </a>
@@ -23,7 +23,7 @@
     </div>
     {/for}
     {for video in public}
-    <div class="col-md-3 videoElement p-2">
+    <div class="col-md-3 videoElement">
         <div class="card">
             <div class="card-header">
                 <h4>{video.name}</h4>

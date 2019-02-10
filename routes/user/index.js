@@ -48,7 +48,11 @@ routes.get('/', (request, result) =>
     {
         utils.printError(result, "You need to be logged in");
     }
+});
 
+routes.get('*', (request, result) =>
+{
+    utils.printError(result, "Page not found.");
 });
 
 module.exports = routes;

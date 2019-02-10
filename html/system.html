@@ -1,0 +1,63 @@
+<center><h1>System Controls</h1></center>
+<br>
+<div class="row">
+    <div class="col-md-4 col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>System Status</h3>
+            </div>
+            <div class="card-body">
+                <p><b>Public Videos Indexed: </b>{publicVideoCount}</p>
+                <p><b>Private Videos Indexed: </b>{privateVideoCount}</p>
+                <p><b>Users: </b>{userCount}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Update System Settings</h3>
+            </div>
+            <div class="card-body">
+                <form action="/system/updateSystem" method ="post" class="p-2">
+                    <div class="form-group">
+                        <label> Base URL
+                            <input class="form-control w-100" type="text" name="baseURL" value="{serverURL}" required>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Public Videos Directory
+                            <input class="form-control w-100" type="text" name="publicDirectory" value="{publicDir}" required>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Private Videos Directory
+                            <input class="form-control w-100" type="text" name="privateDirectory" value="{privateDir}">
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" name="add_user" value="Update System"
+                               class="btn btn-lg btn-secondary"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Re-Index Video</h3>
+            </div>
+            <div class="card-body">
+                <form action="/system/indexVideos" method ="post" class="p-2">
+                    <div class="text-center">
+                        <input type="submit" name="Index_Videos" value="Index Videos"
+                               class="btn btn-lg btn-secondary"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

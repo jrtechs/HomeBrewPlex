@@ -15,6 +15,8 @@ routes.use('/watch', watch);
 const user = require('./user');
 routes.use('/user', user);
 
+const syss = require('./system');
+routes.use('/system', syss);
 
 const utils = require("../utils");
 
