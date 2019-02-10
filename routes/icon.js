@@ -18,7 +18,7 @@ routes.get('/', (request, result) =>
         const videoID = request.query.v;
 
         const splitArray = videoID.split('/');
-        const name = splitArray[splitArray.length -1] + ".png";
+        const name = splitArray[splitArray.length -1] + ".gif";
 
         var file="";
 
@@ -36,6 +36,7 @@ routes.get('/', (request, result) =>
         }
         else
         {
+            console.log("reading ./icon/public/" + name);
             file = fs.readFileSync("./icon/public/" + name);
         }
 

@@ -2,7 +2,7 @@ const configManager = require('./configManager');
 
 const recursive = require('./recursiveTraversal');
 
-const filepreview = require('filepreview');
+const generatePreview = require('ffmpeg-generate-video-preview')
 
 const fs = require('fs');
 
@@ -17,24 +17,22 @@ function createIndex(filename, videos, templateKey)
         console.log("Generating icon for " + filename);
         var splitArray = filename.split('/');
         var name = splitArray[splitArray.length -1];
-        const icon = './icon/' + templateKey + '/' + name + ".png";
+        const icon = 'icon/' + templateKey + '/' + name + ".gif";
         if (!fs.existsSync(icon))
         {
-            var options = {
-                width: 200,
-                quality: 50,
-                previewTime: '00:05:00.000'
-            };
-
-            filepreview.generate(filename, icon, options, function (error)
-            {
-                if (error)
+            var options =
                 {
-                    resolve();
-                }
-                console.log('File preview is located ' + icon);
+                    input: filename,
+                    output: icon,
+                    width: 128,
+                    numFrames: 40
+                };
+            console.log(options);
+            generatePreview(options).then(function(metaData)
+            {
+                console.log(metaData);
                 resolve();
-            });
+            })
         }
         else
         {
@@ -125,7 +123,7 @@ module.exports =
                     {
                         const splitArray = publicVideos[i].name.split('/');
                         const name = splitArray[splitArray.length -1];
-
+                        videoName = videoName.split('/').join("");
                         if(name === videoName)
                         {
                             return true;
@@ -141,7 +139,8 @@ module.exports =
                     const splitArray = publicVideos[i].name.split('/');
                     const name = splitArray[splitArray.length -1];
 
-                    if(name === videoName)
+                    videoName = videoName.split('/').join("");
+                    if(name + "" === videoName)
                     {
                         return true;
                     }
