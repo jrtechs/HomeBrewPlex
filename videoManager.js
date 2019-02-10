@@ -121,5 +121,13 @@ module.exports =
                 }
                 return false;
             }
+        },
+
+        reIndexVideos: function()
+        {
+            publicVideos = [];
+            privateVideos = [];
+            module.exports.indexVideos(configManager.getPublicDirectory(), publicVideos, "public");
+            module.exports.indexVideos(configManager.getRootDirectory(), privateVideos, "public");
         }
     };

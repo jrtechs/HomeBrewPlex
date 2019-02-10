@@ -17,17 +17,26 @@ module.exports=
 
         getRootDirectory: function()
         {
-            return "/home/jeff/public/Shows/Rick And Morty/Season 1";
+            return config.privateDir;
         },
 
         getPublicDirectory: function()
         {
-            return "/home/jeff/work/aaSchool/Algo/online Lectures/";
+            return config.publicDir;
         },
 
         getServerURL: function()
         {
-            return "http://localhost:5000";
+            return config.serverURL;
+        },
+
+        updateSystem: function(host, publicDir, privateDir)
+        {
+            config.serverURL = host;
+            config.privateDir = privateDir;
+            config.publicDir = publicDir;
+
+            module.exports.syncToDisk();
         }
 
     };
