@@ -10,6 +10,49 @@ var privateVideos = null;
 
 var publicVideos = null;
 
+function createIndex(filename, videos, templateKey)
+{
+    return new Promise(function(resolve, reject)
+    {
+        console.log("Generating icon for " + filename);
+        var splitArray = filename.split('/');
+        var name = splitArray[splitArray.length -1];
+        const icon = './icon/' + templateKey + '/' + name + ".png";
+        if (!fs.existsSync(icon))
+        {
+            var options = {
+                width: 200,
+                quality: 50,
+                previewTime: '00:05:00.000'
+            };
+
+            filepreview.generate(filename, icon, options, function (error)
+            {
+                if (error)
+                {
+                    resolve();
+                }
+                console.log('File preview is located ' + icon);
+                resolve();
+            });
+        }
+        else
+        {
+            resolve();
+        }
+    })
+}
+
+async function runTasksSync(files, videos, templateKey)
+{
+    for(var file of files)
+    {
+        await createIndex(file, videos, templateKey);
+    }
+}
+
+
+
 module.exports =
     {
         indexVideos: function(rootDir, videos, templateKey)
@@ -20,26 +63,10 @@ module.exports =
                 {
                     files.forEach(file =>
                     {
-                        var splitArray = file.split('/');
-                        var name = splitArray[splitArray.length -1];
-                        const icon = './icon/' + templateKey + '/' + name + ".png";
-                        if (!fs.existsSync(icon))
-                        {
-                            var options = {
-                                width: 200,
-                                quality: 50,
-                                previewTime: '00:05:00.000'
-                            };
-
-                            filepreview.generate(file, icon, options,function(error) {
-                                if (error) {
-                                    return console.log(error);
-                                }
-                                console.log('File preview is located ' + icon);
-                            });
-                        }
                         videos.push({name: file.replace(rootDir, '')});
                     });
+                    runTasksSync(files.splice(0, files.length/2), videos, templateKey);
+                    runTasksSync(files.splice(files.length/2, files.length), videos, templateKey);
                     resolve();
                 });
             }).catch(function(error)
@@ -128,6 +155,6 @@ module.exports =
             publicVideos = [];
             privateVideos = [];
             module.exports.indexVideos(configManager.getPublicDirectory(), publicVideos, "public");
-            module.exports.indexVideos(configManager.getRootDirectory(), privateVideos, "public");
+            module.exports.indexVideos(configManager.getRootDirectory(), privateVideos, "private");
         }
     };

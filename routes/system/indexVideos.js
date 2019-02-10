@@ -4,7 +4,7 @@ const utils = require("../../utils");
 
 const videoManager = require("../../videoManager");
 
-routes.get('/', (request, result) =>
+routes.post('/', (request, result) =>
 {
     if(utils.checkPrivilege(request) === utils.PRIVILEGE.ADMIN)
     {

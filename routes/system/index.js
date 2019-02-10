@@ -29,4 +29,9 @@ routes.get('/', (request, result) =>
     }
 });
 
+routes.get('*', (request, result) =>
+{
+    utils.printError(result, "Page not found.");
+});
+
 module.exports = routes;
