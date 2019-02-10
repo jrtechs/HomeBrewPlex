@@ -1,24 +1,74 @@
 <div class="row">
-    <div class="col-4">
-        {if loggedIn}
-            <div class="card">
-
-                <div class="card-header">
-                    <h3>Profile</h3>
-                </div>
-                <div class="card-body">
-                    <p>Welcome {username}.</p>
-                    <br>
-                    <form action="/user/logout" method ="post" class="p-2">
-                        <div class="text-center">
-                            <button class="btn btn-lg btn-secondary">LogOut</button>
-                        </div>
-                        <br>
-                    </form>
-                </div>
+    <div class="col-12 col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>About</h3>
             </div>
+            <div class="card-body">
+                <p>
+                    This is a personal video hosting website.
+                    Like Plex, this allows people to host videos on their server and easily access them using a web GUI.
+                    Rather than mounting network drives, this gives you the ability to take advantage of
+                    video buffering and have greater device compatibility.
+                </p>
+                <p>
+                    The ability to create user accounts and specify public video directories makes it easy
+                    to share videos with friends and family.
+                    The minimal node app makes this ideal for people with low spec hardware
+                    like old computers and cloud droplets.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        {if loggedIn}
+        <div class="card">
+            <div class="card-header">
+                <h3>Profile</h3>
+            </div>
+            <div class="card-body">
+                <p>Welcome {username}.</p>
+                <br>
+                <form action="/user/logout" method ="post" class="p-2">
+                    <div class="text-center">
+                        <button class="btn btn-lg btn-secondary">LogOut</button>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
         {else}
-            {>login}
+        {>login}
         {/if}
     </div>
+    <div class="col-12 col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Usage</h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    Installation instructions can be found on this project's <a href="https://github.com/jrtechs/HomeBrewPlex">github repository</a>.
+                </p>
+
+                <p>
+                    The <a href="/videos">videos page</a> gives you a place to watch all of your videos using the generic HTML5 video player.
+                    If your web browser does not support the codec which the video is encoded in, you can copy the direct link to the network
+                    stream and open it in a video player like <a href="https://www.videolan.org/index.html">VLC</a>.
+                </p>
+
+                <p>
+                    The <a href="/users">users page</a> gives you the ability to create new users and re-generate their API keys.
+                    Only users which are admin can create and edit users, however, regular users can still re-generate their API
+                    keys and change their username and password.
+                </p>
+
+                <p>
+                    The <a href="/system">system page</a> allows you to specify the directories where both the public and private
+                    videos are located.
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>

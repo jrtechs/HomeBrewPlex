@@ -18,8 +18,9 @@ routes.get('/', (request, result) =>
         userUtils.isValidAPI(request.query.api) ||
         videoManager.isPublicVideo(videoID))
     {
-        const rootDir = configManager.getRootDirectory();
-
+        const rootDir= (videoManager.isPublicVideo(videoID)) ?
+            configManager.getPublicDirectory() :
+            configManager.getRootDirectory();
 
         const path = rootDir + videoID;
         const stat = fs.statSync(path);
