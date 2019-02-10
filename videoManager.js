@@ -59,13 +59,20 @@ module.exports =
             {
                 recursive(rootDir, function (err, files)
                 {
-                    files.forEach(file =>
+                    if(files !== undefined)
                     {
-                        videos.push({name: file.replace(rootDir, '')});
-                    });
-                    runTasksSync(files.splice(0, files.length/2), videos, templateKey);
-                    runTasksSync(files.splice(files.length/2, files.length), videos, templateKey);
-                    resolve();
+                        files.forEach(file =>
+                        {
+                            videos.push({name: file.replace(rootDir, '')});
+                        });
+                        runTasksSync(files.splice(0, files.length/2), videos, templateKey);
+                        runTasksSync(files.splice(files.length/2, files.length), videos, templateKey);
+                        resolve();
+                    }
+                    else
+                    {
+                        resolve();
+                    }
                 });
             }).catch(function(error)
             {
