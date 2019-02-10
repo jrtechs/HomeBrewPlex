@@ -13,34 +13,41 @@ This web system enables users to log into the system and view videos using the b
 - Easy to install
 - Easily expandable and hackable to fit your needs
 
+# Installation
 
+## NPM Dependencies
 
-npm dependencies
 ```bash
-npm install express --save
-npm install fs --save
-npm install express-session --save
-npm install whiskers --save
+npm install
 ```
 
-Dependencies
+## System Dependencies
 
 ```bash
 $apt-get install ffmpeg
 ```
 
+## Running
 
-Codacs which don't work
-H.265 
-MPEG-2 Video  AC-3 (ATSC A/52)
+To deploy this you will want to run this behind a reverse NGINX proxy to
+allow you to encrypt all of the network traffic.
+There are plenty of tutorials on how to do this online with let's encrypt.
 
-Video but no audio
-H.264 audio:AC-3 (ATSC A/52)
-H.264 (Main Profile)  AC-3 (ATSC A/52)
+To run this program either run `run.sh` or execute `node server.js`. This
+by default will run on port 5000 -- you are able to change this in `conf.json`.
+To make this easier for you in the long run, I usually run my node applications
+as [systemd](https://freedesktop.org/wiki/Software/systemd/) services. 
 
-Audio but no video:
-H.265 (Main 10 Profile)  MPEG-4 AAC
+The default config provided in this project has the default username of admin and password
+of admin. 
+You will want create a new admin user and remove the default one once you 
+get this running. 
 
+# Contributing
 
-just work:
-H.264 (High Profile),   MPEG-4 AAC
+This was largely just a weekend hack for me.
+This currently fits most of my needs and is *functional*.
+If you find any bugs, feel free to open a issue and I will get around to looking at it. 
+I am always looking for people to contribute to my projects.
+If you have an idea for an enhancement for this project feel free to hack away and issue a PR.
+Contact me using the form on my [blog](jrtechs.net) or by opening a github issue if you have any questions regarding the code or how to use this project.

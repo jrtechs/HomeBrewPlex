@@ -1,6 +1,6 @@
 {
-  "name": "HomeBrewPlex",
-  "version": "0.1.0",
+  "name": "Home Brew Plex",
+  "version": "1.0.0",
   "description": "Light weight alternative for Plex",
   "main": "server.js",
   "scripts": {
@@ -18,8 +18,11 @@
   },
   "homepage": "https://github.com/jrtechs/HomeBrewPlex#readme",
   "dependencies": {
+    "crypto": "^1.0.1",
     "download-file": "^0.1.5",
+    "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "filepreview": "^1.0.16",
     "fs": "0.0.2",
     "path": "^0.12.7",
     "url": "^0.11.0",
