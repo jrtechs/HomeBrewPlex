@@ -36,7 +36,6 @@ routes.get('/', (request, result) =>
         }
         else
         {
-            console.log("reading ./icon/public/" + name);
             file = fs.readFileSync("./icon/public/" + name);
         }
 

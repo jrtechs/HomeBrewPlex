@@ -1,0 +1,21 @@
+# File Location /lib/systemd/system
+#
+# After file creation run: systemctl daemon-reload
+# enable service on start up: systemctl enable jrtechsvideos.service
+# start the service: systemctl start jrtechsvideos
+
+
+[Unit]
+Description=Videos site for jrtechs
+Documentation=https://videos.jrtechs.net
+After=network.target
+
+[Service]
+Type=simple
+User=jeff
+WorkingDirectory=/var/www/video.jrtechs.net/HomeBrewPlex
+ExecStart=/bin/bash /var/www/video.jrtechs.net/HomeBrewPlex/run.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
