@@ -10,11 +10,16 @@ routes.use('/updateSystem', updateSystem);
 
 const configLoader = require("../../configManager");
 
+const videoManager = require("../../videoManager");
+
 function getSystemInformation(templateContext, request)
 {
     templateContext.serverURL = configLoader.getServerURL();
     templateContext.privateDir = configLoader.getRootDirectory();
     templateContext.publicDir = configLoader.getPublicDirectory();
+    templateContext.publicVideoCount = videoManager.getPublicVideoCount();
+    templateContext.privateVideoCount = videoManager.getPrivateVideoCount();
+    templateContext.userCount = configLoader.getUserCount();
 }
 
 routes.get('/', (request, result) =>

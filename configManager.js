@@ -37,6 +37,13 @@ module.exports=
             config.publicDir = publicDir;
 
             module.exports.syncToDisk();
+        },
+
+        getUserCount: function()
+        {
+            return (config.hasOwnProperty('users')) ? config.users.length : 0;
         }
+
+
 
     };

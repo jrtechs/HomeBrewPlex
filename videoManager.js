@@ -156,5 +156,15 @@ module.exports =
             privateVideos = [];
             module.exports.indexVideos(configManager.getPublicDirectory(), publicVideos, "public");
             module.exports.indexVideos(configManager.getRootDirectory(), privateVideos, "private");
+        },
+
+        getPublicVideoCount: function()
+        {
+            return (publicVideos === null) ? 0: publicVideos.length;
+        },
+
+        getPrivateVideoCount: function()
+        {
+            return (privateVideos === null) ? 0: privateVideos.length;
         }
     };
