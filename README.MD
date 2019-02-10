@@ -27,6 +27,9 @@ npm install
 $apt-get install ffmpeg
 ```
 
+This also relies on [gifski](https://gif.ski/) which can be installed following the links on their website.
+Both ffmpeg and gifski are used for generating the video preview gifs. 
+
 ## Running
 
 To deploy this you will want to run this behind a reverse NGINX proxy to
@@ -41,7 +44,7 @@ as [systemd](https://freedesktop.org/wiki/Software/systemd/) services.
 The default config provided in this project has the default username of admin and password
 of admin. 
 You will want create a new admin user and remove the default one once you 
-get this running. 
+get this running.
 
 # Contributing
 
