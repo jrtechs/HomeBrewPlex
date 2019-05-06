@@ -32,6 +32,9 @@ function createIndex(filename, videos, templateKey)
             {
                 console.log(metaData);
                 resolve();
+            }).catch(function(error)
+            {
+                resolve();
             })
         }
         else
