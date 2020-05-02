@@ -59,7 +59,7 @@ module.exports =
                 return module.exports.PRIVILEGE.NOBODY;
             else if(request.session.admin === true)
                 return module.exports.PRIVILEGE.ADMIN;
-            return module.exports.RIVILEGE.MEMBER;
+            return module.exports.PRIVILEGE.MEMBER;
         },
 
         printError: function(result, errorMessage)
