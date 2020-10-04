@@ -1,5 +1,3 @@
-const configManager = require('./configManager');
-
 const recursive = require('./recursiveTraversal');
 
 const generatePreview = require('ffmpeg-generate-video-preview')
@@ -91,12 +89,12 @@ module.exports =
                 if(templateKey === "public")
                 {
                     videos = publicVideos;
-                    rootDir = configManager.getPublicDirectory();
+                    rootDir = process.env.PUBLIC_DIR
                 }
                 else
                 {
                     videos = privateVideos;
-                    rootDir = configManager.getRootDirectory();
+                    rootDir = process.env.PRIVATE_DIR
                 }
 
                 if(videos === null)
@@ -126,8 +124,7 @@ module.exports =
             if(publicVideos == null)
             {
                 publicVideos = [];
-                rootDir = configManager.getPublicDirectory();
-                module.exports.indexVideos(rootDir, publicVideos, "public").then(function()
+                module.exports.indexVideos(process.env.PUBLIC_DIR, publicVideos, "public").then(function()
                 {
                     for(var i = 0; i < publicVideos.length; i++)
                     {
@@ -163,8 +160,8 @@ module.exports =
         {
             publicVideos = [];
             privateVideos = [];
-            module.exports.indexVideos(configManager.getPublicDirectory(), publicVideos, "public");
-            module.exports.indexVideos(configManager.getRootDirectory(), privateVideos, "private");
+            module.exports.indexVideos(process.env.PUBLIC_DIR, publicVideos, "public");
+            module.exports.indexVideos(process.env.PRIVATE_DIR, privateVideos, "private");
         },
 
         getPublicVideoCount: function()

@@ -4,8 +4,6 @@ const utils = require("../utils");
 
 const userUtils = require("../user");
 
-const configManager = require("../configManager");
-
 const fs = require('fs');
 
 const videoManager = require("../videoManager");
@@ -19,8 +17,8 @@ routes.get('/', (request, result) =>
         videoManager.isPublicVideo(videoID))
     {
         const rootDir= (videoManager.isPublicVideo(videoID)) ?
-            configManager.getPublicDirectory() :
-            configManager.getRootDirectory();
+            process.env.PUBLIC_DIR :
+            process.env.PRIVATE_DIR;
 
         const path = rootDir + videoID;
         const stat = fs.statSync(path);

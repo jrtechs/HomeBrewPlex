@@ -1,6 +1,4 @@
 {
-    "port": 5000,
-    "sessionSecret": "super_duper_secret_secret",
     "users": [
         {
             "username": "admin",
@@ -10,8 +8,5 @@
             "admin": true,
             "api": "e8d4fd1267e14660bde678be259b86af413be4aca234bafa773a7c9fd535e9e2"
         }
-    ],
-    "serverURL": "http://localhost:5000",
-    "privateDir": "/home/jeff/private/videos",
-    "publicDir": "/home/jeff/public/videos"
+    ]
 }

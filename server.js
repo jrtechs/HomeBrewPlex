@@ -1,16 +1,16 @@
 /** express app for routing */
 const express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**session data for login and storing preferences*/
 const session = require('express-session');
-
-const configLoader = require('./configManager.js');
 
 const app = express();
 
 /**Initializes sessions for login */
 app.use(session(
-    { secret: configLoader.getConfiguration().sessionSecret,
+    { secret: process.env.SESSION_SECRET,
             cookie: { maxAge: 6000000 }}
     ));
 
@@ -26,6 +26,6 @@ app.use('/', routes);
 
 
 
-app.listen(configLoader.getConfiguration().port, () =>
-    console.log(`App listening on port ${configLoader.getConfiguration().port}!`)
+app.listen(process.env.PORT, () =>
+    console.log(`App listening on port ${process.env.PORT}!`)
 );

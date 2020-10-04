@@ -4,7 +4,18 @@ const fs = require('fs');
 
 module.exports =
     {
-        writeJSONToFile: function(fileName, jsonObject)
+        syncEnv: function()
+        {
+            const envVars = ["PORT", "SESSION_SECRET", "SERVER_URL", "PRIVATE_DIR", "PUBLIC_DIR"];
+            const data = envVars.map(function(envVar) {
+                return `${envVar}=${process.env[envVar]}`
+            }).join("\r\n");
+            fs.writeFile('.env', data, 'utf8', function() {
+                console.log("Wrote to .env file");
+            });
+        },
+
+        writEnvToFile: function(fileName, jsonObject)
         {
             const json = JSON.stringify(jsonObject, null, 4);
             fs.writeFile(fileName, json, 'utf8', function()

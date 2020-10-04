@@ -15,35 +15,17 @@ module.exports=
             fileIO.writeJSONToFile(CONFIG_FILE_NAME, config);
         },
 
-        getRootDirectory: function()
-        {
-            return config.privateDir;
-        },
-
-        getPublicDirectory: function()
-        {
-            return config.publicDir;
-        },
-
-        getServerURL: function()
-        {
-            return config.serverURL;
-        },
-
         updateSystem: function(host, publicDir, privateDir)
         {
-            config.serverURL = host;
-            config.privateDir = privateDir;
-            config.publicDir = publicDir;
+            process.env.SERVER_URL = host;
+            process.env.PRIVATE_DIR = privateDir;
+            process.env.PUBLIC_DIR = publicDir;
 
-            module.exports.syncToDisk();
+            fileIO.syncEnv();
         },
 
         getUserCount: function()
         {
             return (config.hasOwnProperty('users')) ? config.users.length : 0;
         }
-
-
-
     };

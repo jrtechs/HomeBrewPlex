@@ -14,9 +14,9 @@ const videoManager = require("../../videoManager");
 
 function getSystemInformation(templateContext, request)
 {
-    templateContext.serverURL = configLoader.getServerURL();
-    templateContext.privateDir = configLoader.getRootDirectory();
-    templateContext.publicDir = configLoader.getPublicDirectory();
+    templateContext.serverURL = process.env.SERVER_URL;
+    templateContext.privateDir = process.env.PRIVATE_DIR;
+    templateContext.publicDir = process.env.PUBLIC_DIR;
     templateContext.publicVideoCount = videoManager.getPublicVideoCount();
     templateContext.privateVideoCount = videoManager.getPrivateVideoCount();
     templateContext.userCount = configLoader.getUserCount();

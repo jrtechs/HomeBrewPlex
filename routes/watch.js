@@ -2,14 +2,12 @@ const routes = require('express').Router();
 
 const utils = require("../utils");
 
-const configManager = require("../configManager");
-
 const videoManager = require("../videoManager");
 
 function getVideoTemplateInfo(templateContext, request)
 {
     templateContext.api = request.session.API;
-    templateContext.serverURL = configManager.getServerURL();
+    templateContext.serverURL = process.env.SERVER_URL;
     templateContext.videoURL = request.query.v.split(" ").join("%20");
 
     if(utils.checkPrivilege(request) === utils.PRIVILEGE.NOBODY
