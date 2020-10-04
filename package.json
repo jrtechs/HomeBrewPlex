@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jrtechs/HomeBrewPlex#readme",
   "dependencies": {
     "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
     "download-file": "^0.1.5",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
