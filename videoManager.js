@@ -22,8 +22,8 @@ function createIndex(filename, videos, templateKey)
                 {
                     input: filename,
                     output: icon,
-                    width: 128,
-                    numFrames: 40
+                    width: 500,
+                    numFrames: 60
                 };
             console.log(options);
             generatePreview(options).then(function(metaData)
