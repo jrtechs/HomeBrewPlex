@@ -15,7 +15,7 @@ module.exports =
             });
         },
 
-        writEnvToFile: function(fileName, jsonObject)
+        writeJSONToFile: function(fileName, jsonObject)
         {
             const json = JSON.stringify(jsonObject, null, 4);
             fs.writeFile(fileName, json, 'utf8', function()

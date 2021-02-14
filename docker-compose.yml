@@ -1,0 +1,19 @@
+version: '3.1'
+
+networks:
+  external-network:
+    external:
+      name: external-network
+
+services:
+  video:
+    image: home-brew-plex
+    build: ./
+    container_name: home-brew-plex
+    restart: always
+    ports:
+      - "4000:4000"
+    networks:
+      - external-network
+    volumes:
+      - ./:/src
